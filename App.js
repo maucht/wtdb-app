@@ -4,6 +4,8 @@ import { StyleSheet, Text, View } from 'react-native';
 import HomeScreen from './screens/home.js'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
+import SearchScreen from './screens/search.js';
+import FullListScreen from './screens/fullList.js';
 
 const Stack = createNativeStackNavigator()
 
@@ -17,6 +19,15 @@ export default function App() {
 
       }
       />
+      <Stack.Screen name = "Search" component={SearchScreen}
+      options = {
+        {headerShown:false}
+      }
+      />
+      <Stack.Screen name = "FullList" component = {FullListScreen} 
+      options = {
+        {headerShown:false}
+      }/>
     </Stack.Navigator>
     </NavigationContainer>
   );

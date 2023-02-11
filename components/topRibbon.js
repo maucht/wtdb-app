@@ -1,6 +1,7 @@
 import { Dimensions, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { useFonts } from 'expo-font'
+import {secondaryColor} from '../assets/colorPallette.js'
 
 const vw = Dimensions.get('window').width
 const vh = Dimensions.get('window').height
@@ -42,6 +43,6 @@ const styles = StyleSheet.create({
         fontFamily:'Nunito-extra-bold',
         marginTop:vh/38,
         fontSize:vw/15,
-        color:'white',
+        color:secondaryColor,
       },
 })
