@@ -10,14 +10,11 @@ import { Entypo } from '@expo/vector-icons'
 import { Svg } from 'react-native-svg'
 import bullets from '../assets/svg/Bullets.svg'
 import {secondaryColor} from '../assets/colorPallette.js'
-import { pool } from '../backend/fetchTable'
 
 
 
 const vw = Dimensions.get('window').width
 const vh = Dimensions.get('window').height
-
-//console.log(executeShellSearch())
 
 class HomeScreen extends Component {
   state = {
