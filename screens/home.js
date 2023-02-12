@@ -6,19 +6,31 @@ import { Component } from 'react'
 import * as Font from "expo-font"
 import {  TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { Entypo } from '@expo/vector-icons'
+import axios from 'axios'
 
 import { Svg } from 'react-native-svg'
 import bullets from '../assets/svg/Bullets.svg'
 import {secondaryColor} from '../assets/colorPallette.js'
+
+import { promiseFullList } from '../backend/fetchTable'
 
 
 
 const vw = Dimensions.get('window').width
 const vh = Dimensions.get('window').height
 
+let fullTable;
+promiseFullList().then((data)=>{
+  fullTable = data
+  console.log("Table:",fullTable)
+
+})
+
+
 class HomeScreen extends Component {
   state = {
     fontsLoaded:false,
+    fullList:null,
   }
 
   async loadFonts(){
@@ -58,11 +70,11 @@ class HomeScreen extends Component {
               <View style = {styles.homeCategories}>
                 <View style={styles.categoryOne} onStartShouldSetResponder={(navIndex)=>this.handleCatNavPress(0)}>
                   <Text style = {styles.categoryText}>Search</Text>
-                  <View marginTop={'-8%'} marginLeft={'10%'}><Entypo name = {'magnifying-glass'} size={vh/14} color={secondaryColor}/></View>
+                  <View marginTop={'-8%'} marginLeft={'11%'}><Entypo name = {'magnifying-glass'} size={vh/14} color={secondaryColor}/></View>
                 </View>
                 <View style = {styles.categoryTwo} onStartShouldSetResponder={(navIndex) => this.handleCatNavPress(1)}>
                   <Text style = {styles.categoryText}>Full{`\n`}List</Text>
-                  <Svg size={70} fill="#ff0000" source = {bullets}/>
+                  <View marginTop = {'-16%'} marginLeft={'11%'}><Entypo name = "book" color = {secondaryColor} size={vh/14}/></View>
                 </View>
                 <View style = {styles.categoryThree} onStartShouldSetResponder={(navIndex) => this.handleCatNavPress(2)}>
                   <Text style = {styles.categoryText}>By Nation</Text>
