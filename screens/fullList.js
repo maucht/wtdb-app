@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {Text,View, Dimensions, ScrollView} from 'react-native'
+import {Text,View, Dimensions, ScrollView, Image} from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import TopRibbon from '../components/topRibbon'
 import BackArrow from '../components/backArrow'
@@ -11,6 +11,14 @@ import { promiseFullList } from '../backend/fetchTable'
 
 const vw = Dimensions.get('window').width
 const vh = Dimensions.get('window').height
+
+
+
+const ammoIconMap = new Map([
+    ["HE","HE_icon.png"],
+    ["AP","AP_icon.png"],
+    ["APHE","APHE.png"]
+])
 
 
 var fullList=new Map();
@@ -41,6 +49,7 @@ class FullListScreen extends Component {
             this.setState({fullList:true})
             this.setState({listLoaded:fullList})
         })
+        console.log("../assets/ammoIcons/"+ammoIconMap.get("HE"))
     }
     render() {
         switch(this.state.fontsLoaded){
@@ -59,15 +68,28 @@ class FullListScreen extends Component {
                             </View>
                         </View>
                         <View height={'100%'} style={{flex:2}}>
-                        <ScrollView marginTop={50}>
+                        <ScrollView marginTop={20}>
                             {
                                 this.state.listLoaded.map((data)=>{ // There is a limit to load amount. Use pages to solve
                                     // console.log(data) use to test that every shell is being caught
-                                    return(
-                                    <View key = {data.Id} width={'90%'} left={'5%'} backgroundColor="rgb(30,30,30)" style={{flex:1}} paddingBottom={'25%'} borderWidth={0.2} borderColor="rgb(20,20,20)">
-                                        <Text key = {data.Id} style = {styles.shellNameText}>{data.ShellName}</Text>
-                                    </View>
-                                )
+                                    switch(ammoIconMap.has(data.ShellType)){
+                                        case(false):
+                                            return(
+                                            <View key = {data.Id} width={'90%'} left={'5%'} backgroundColor="rgb(30,30,30)" style={{flex:1}} paddingBottom={'10%'} borderWidth={0.2} borderColor="rgb(20,20,20)">
+                                                <Text key = {data.Id} style = {styles.shellNameText}>{data.ShellName}</Text>
+                                                <Text style = {styles.shellTypeText}>{data.ShellType}</Text>
+                                            </View>
+                                    )
+                                        case(true):
+                                            return(
+                                            <View key = {data.Id} width={'90%'} left={'5%'} backgroundColor="rgb(30,30,30)" style={{flex:1}} paddingBottom={'10%'} borderWidth={0.2} borderColor="rgb(20,20,20)">
+                                                <Text style = {styles.shellNameText}>{data.ShellName}</Text>
+                                                <Text style = {styles.shellTypeText}>{data.ShellType}</Text>
+                                                <Image source ={require("../assets/ammoIcons/APHE.png")} marginLeft={'10%'} marginTop={'10%'} style = {styles.ammoImage}/>
+                                            </View>
+                                            
+                                            )
+                                        }
                                 })
                             }
                             <View>
@@ -125,9 +147,25 @@ const styles = {
     },
     shellNameText:{
         fontFamily:'Nunito-extra-bold',
+        fontSize:vw/20,
         color:'white',
         marginLeft:'60%',
+        marginTop:'5%',
         flex:1
+    },
+    shellTypeText:{
+        fontFamily:'Nunito-extra-bold',
+        fontSize:vw/27,
+        color:'rgb(100,100,100)',
+        marginLeft:'60%',
+        marginTop:'10%',
+        flex:1,
+    },
+    ammoImage:{
+        position:'absolute',
+        height:vh/20,
+        width:vh/20,
+        borderRadius:6,
     },
 }
 export default FullListScreen;
