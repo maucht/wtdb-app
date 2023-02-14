@@ -77,7 +77,7 @@ class HomeScreen extends Component {
                   <View marginTop = {'-16%'} marginLeft={'11%'}><Entypo name = "book" color = {secondaryColor} size={vh/14}/></View>
                 </View>
                 <View style = {styles.categoryThree} onStartShouldSetResponder={(navIndex) => this.handleCatNavPress(2)}>
-                  <Text style = {styles.categoryText}>By Nation</Text>
+                  <Text style = {styles.categoryText}>By Tech Tree</Text>
                   <View marginTop='-8%' marginLeft='12%'><Entypo name="flag" color={secondaryColor} size = {vh/14}/></View>
                 </View>
                 <View style = {styles.categoryFour} onStartShouldSetResponder={(navIndex) => this.handleCatNavPress(3)}>

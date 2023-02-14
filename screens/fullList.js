@@ -46,6 +46,7 @@ class FullListScreen extends Component {
         switch(this.state.fontsLoaded){
             case(true):
                 if(this.state.listLoaded){
+                    console.log(this.state.fullList)
                     return (
                         <View style = {styles.homeContainer}>
             
@@ -57,19 +58,23 @@ class FullListScreen extends Component {
                                 <FontAwesome name={this.state.dropdown1Toggle==true ? "angle-up":"angle-down"} color="white" size={30}/>
                             </View>
                         </View>
-
-                        <ScrollView height={'300%'}>
-                            {this.state.listLoaded.map((data)=>{ // There is a limit to load amount. Use pages to solve
-                                return(
-                                    <View width={'90%'} height={'1%'} left={'5%'} backgroundColor="red">
-                                        <Text>{data.ShellName}</Text>
+                        <View height={'100%'} style={{flex:2}}>
+                        <ScrollView marginTop={50}>
+                            {
+                                this.state.listLoaded.map((data)=>{ // There is a limit to load amount. Use pages to solve
+                                    // console.log(data) use to test that every shell is being caught
+                                    return(
+                                    <View key = {data.Id} width={'90%'} left={'5%'} backgroundColor="rgb(30,30,30)" style={{flex:1}} paddingBottom={'25%'} borderWidth={0.2} borderColor="rgb(20,20,20)">
+                                        <Text key = {data.Id} style = {styles.shellNameText}>{data.ShellName}</Text>
                                     </View>
                                 )
-                            })}
+                                })
+                            }
                             <View>
                                 <Text>Page</Text>
                             </View>
                         </ScrollView>
+                        </View>
             
                         </View>
                 )
@@ -117,6 +122,12 @@ const styles = {
         color:'white',
         marginLeft:vw/15,
         fontSize:vh/30
-    }
+    },
+    shellNameText:{
+        fontFamily:'Nunito-extra-bold',
+        color:'white',
+        marginLeft:'60%',
+        flex:1
+    },
 }
 export default FullListScreen;
