@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import SearchScreen from './screens/search.js';
 import FullListScreen from './screens/fullList.js';
+import Shell from './screens/shell.js';
 
 const Stack = createNativeStackNavigator()
 
@@ -28,6 +29,7 @@ export default function App() {
       options = {
         {headerShown:false}
       }/>
+      <Stack.Screen name="Shell" component = {Shell}/>
     </Stack.Navigator>
     </NavigationContainer>
   );

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {Text,View, Dimensions, ScrollView, Image} from 'react-native'
+import {Text,View, Dimensions, ScrollView, Image, Touchable} from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import TopRibbon from '../components/topRibbon'
 import BackArrow from '../components/backArrow'
@@ -7,6 +7,7 @@ import * as Font from 'expo-font'
 import {FontAwesome} from '@expo/vector-icons'
 
 import { promiseFullList } from '../backend/fetchTable'
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 
 
 const vw = Dimensions.get('window').width
@@ -15,9 +16,33 @@ const vh = Dimensions.get('window').height
 
 
 const ammoIconMap = new Map([
-    ["HE","HE_icon.png"],
-    ["AP","AP_icon.png"],
-    ["APHE","APHE.png"]
+    ["HE",require("../assets/ammoIcons/HE_icon.png")],
+    ["AP",require("../assets/ammoIcons/AP_icon.png")],
+    ["APHE",require("../assets/ammoIcons/APHE.png")],
+    ["AC",require("../assets/ammoIcons/AC_icon.png")],
+    ["APBC",require("../assets/ammoIcons/APBC_icon.png")],
+    ["APC",require("../assets/ammoIcons/APC_icon.png")],
+    ["APCBC",require("../assets/ammoIcons/APCBC_icon.png")],
+    ["APCR",require("../assets/ammoIcons/APCR_icon.png")],
+    ["APDS",require("../assets/ammoIcons/APDS_icon.png")],
+    ["APFSDS",require("../assets/ammoIcons/APFSDS_icon.png")],
+    ["APHECBC",require("../assets/ammoIcons/APHECBC_icon.png")],
+    ["ATGM",require("../assets/ammoIcons/ATGM_icon.png")],
+    ["ATGM-HE",require("../assets/ammoIcons/ATGM-HE_icon.png")],
+    ["ATGM-OTA",require("../assets/ammoIcons/ATGM-OTA_icon.png")],
+    ["ATGM-TANDEM",require("../assets/ammoIcons/ATGM-Tandem_Icon.png")],
+    ["ATGM-VT",require("../assets/ammoIcons/ATGM-VT_icon.png")],
+    ["HEAT",require("../assets/ammoIcons/HEAT_icon.png")],
+    ["HEATFS",require("../assets/ammoIcons/HEATFS_icon.png")],
+    ["HEATFS-VT",require("../assets/ammoIcons/HEATFS-VT_icon.png")],
+    ["HEAT-GRENADE",require("../assets/ammoIcons/HEAT-Grenade_icon.png")],
+    ["HE-GRENADE",require("../assets/ammoIcons/HE-Grenade_icon.png")],
+    ["HESH",require("../assets/ammoIcons/HESH_icon.png")],
+    ["HE-TF",require("../assets/ammoIcons/HE-TF_icon.png")],
+    ["HE-VT",require("../assets/ammoIcons/HE-VT_icon.png")],
+    ["ROCKET",require("../assets/ammoIcons/Rocket_icon.png")],
+    ["SHRAPNEL",require("../assets/ammoIcons/Shrapnel_icon.png")],
+    ["VOG",require("../assets/ammoIcons/VOG_icon.png")],
 ])
 
 
@@ -51,6 +76,20 @@ class FullListScreen extends Component {
         })
         console.log("../assets/ammoIcons/"+ammoIconMap.get("HE"))
     }
+    findAmmoIcon(ammoType){
+        if(!ammoIconMap.has(ammoType)){
+
+            return ammoIconMap.get("APHE")
+        }
+        else{
+            return ammoIconMap.get(ammoType)
+        }
+
+    }
+    shellClicked(shellName){
+        console.log("SHELL CLICKED",shellName)
+        this.props.navigation.navigate("Shell")
+    }
     render() {
         switch(this.state.fontsLoaded){
             case(true):
@@ -77,15 +116,16 @@ class FullListScreen extends Component {
                                             return(
                                             <View key = {data.Id} width={'90%'} left={'5%'} backgroundColor="rgb(30,30,30)" style={{flex:1}} paddingBottom={'10%'} borderWidth={0.2} borderColor="rgb(20,20,20)">
                                                 <Text key = {data.Id} style = {styles.shellNameText}>{data.ShellName}</Text>
-                                                <Text style = {styles.shellTypeText}>{data.ShellType}</Text>
+                                                <Text style = {styles.shellTypeText}>{data.ShellType} {data.ShellCaliber}mm</Text>
                                             </View>
                                     )
                                         case(true):
                                             return(
                                             <View key = {data.Id} width={'90%'} left={'5%'} backgroundColor="rgb(30,30,30)" style={{flex:1}} paddingBottom={'10%'} borderWidth={0.2} borderColor="rgb(20,20,20)">
                                                 <Text style = {styles.shellNameText}>{data.ShellName}</Text>
-                                                <Text style = {styles.shellTypeText}>{data.ShellType}</Text>
-                                                <Image source ={require("../assets/ammoIcons/APHE.png")} marginLeft={'10%'} marginTop={'10%'} style = {styles.ammoImage}/>
+                                                <Text style = {styles.shellTypeText}>{data.ShellType} {data.ShellCaliber}mm</Text>
+                                                <Image source ={this.findAmmoIcon(data.ShellType)} marginLeft={'10%'} marginTop={'10%'} style = {styles.ammoImage}/>
+                                                
                                             </View>
                                             
                                             )
@@ -96,6 +136,7 @@ class FullListScreen extends Component {
                                 <Text>Page</Text>
                             </View>
                         </ScrollView>
+                        
                         </View>
             
                         </View>
