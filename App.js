@@ -29,7 +29,11 @@ export default function App() {
       options = {
         {headerShown:false}
       }/>
-      <Stack.Screen name="Shell" component = {Shell}/>
+      <Stack.Screen name="Shell" component = {Shell}
+      options = {
+        {headerShown:false}
+      }
+      />
     </Stack.Navigator>
     </NavigationContainer>
   );

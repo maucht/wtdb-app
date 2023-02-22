@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {Text,View, Dimensions, ScrollView, Image, Touchable} from 'react-native'
+import {Text,View, Dimensions, ScrollView, Image, Touchable, TouchableHighlight} from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import TopRibbon from '../components/topRibbon'
 import BackArrow from '../components/backArrow'
@@ -86,9 +86,9 @@ class FullListScreen extends Component {
         }
 
     }
-    shellClicked(shellName){
-        console.log("SHELL CLICKED",shellName)
-        this.props.navigation.navigate("Shell")
+    shellClicked(shell){
+        console.log("SHELL CLICKED",shell.ShellName)
+        this.props.navigation.navigate("Shell",{shell})
     }
     render() {
         switch(this.state.fontsLoaded){
@@ -121,12 +121,13 @@ class FullListScreen extends Component {
                                     )
                                         case(true):
                                             return(
+                                            <TouchableHighlight onPress={(shell)=>this.shellClicked(data)}>
                                             <View key = {data.Id} width={'90%'} left={'5%'} backgroundColor="rgb(30,30,30)" style={{flex:1}} paddingBottom={'10%'} borderWidth={0.2} borderColor="rgb(20,20,20)">
                                                 <Text style = {styles.shellNameText}>{data.ShellName}</Text>
                                                 <Text style = {styles.shellTypeText}>{data.ShellType} {data.ShellCaliber}mm</Text>
                                                 <Image source ={this.findAmmoIcon(data.ShellType)} marginLeft={'10%'} marginTop={'10%'} style = {styles.ammoImage}/>
-                                                
                                             </View>
+                                            </TouchableHighlight>
                                             
                                             )
                                         }
