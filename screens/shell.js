@@ -98,7 +98,16 @@ class Shell extends Component {
         <Text>mm</Text>
       )
     }
+  }
+  penFields(){
+    return(
+      <>
+      <Text style = {styles.topPenText}><Text style = {styles.penDistHeaders}>10m</Text> - {this.state.shellData.TenPen}mm        <Text style = {styles.topPenText}><Text style = {styles.penDistHeaders}>100m</Text> - {this.state.shellData.HundredPen}mm</Text></Text>
+      
+      <Text style = {styles.topPenText}><Text style = {styles.penDistHeaders}>500m</Text> - {this.state.shellData.FiveHundredPen}mm       <Text style = {styles.topPenText}><Text style = {styles.penDistHeaders}>1000m</Text> - {this.state.shellData.ThousandPen}mm</Text></Text>
 
+      </>
+    )
   }
   render() {
     switch(this.state.fontsLoaded){
@@ -112,8 +121,13 @@ class Shell extends Component {
           <Text style = {styles.shellNameHeader}>{this.state.shellData.ShellName}</Text>
           <Image source = {this.findAmmoIcon(this.state.shellData.ShellType)} style = {styles.ammoImage}/>
           <Text style = {styles.shellTypeText}>Type: {this.state.shellData.ShellType}</Text>
+          <Text style = {styles.shellTypeText}>Velocity: {this.state.shellData.Velocity} m/s</Text>
           {this.nonAtgmFields()}
           {this.explosiveFields()}
+          <Text style = {styles.shellPenStatsHeader}>Pen Stats</Text>
+          <View style = {styles.shellPenStats}>
+            {this.penFields()}
+          </View>
           <Text></Text>
           </View>
           
@@ -162,13 +176,41 @@ const styles = {
     color:'rgb(205,205,205)',
     fontFamily:'Nunito-bold',
     marginTop:'10%',
-    fontSize: vw/20,
+    fontSize: vh/46,
   },
   shellCaliberText:{
     color:'rgb(205,205,205)',
     fontFamily:'Nunito-bold',
     marginTop:'10%',
-    fontSize: vw/20,
+    fontSize: vh/46,
+  },
+  shellPenStatsHeader:{
+    alignSelf:'center',
+    color:'rgb(245,245,245)',
+    fontSize:vh/40,
+    fontFamily:'Nunito-bold',
+    marginTop:vh/26,
+  },
+  shellPenStats:{
+    position:'absolute',
+    width:'100%',
+    height:'25%',
+    marginTop:'140%',
+    alignSelf:'center',
+    borderWidth:4,
+    justifyContent:'center',
+    paddingBottom:'5%',
+    paddingLeft:'5%',
+  },
+  topPenText:{
+    color:'rgb(205,205,205)',
+    fontSize:vw/22.5,
+    marginLeft:vw/20,
+    marginTop:vh/50,
+    fontFamily:'Nunito-bold', 
+  },
+  penDistHeaders:{
+    color:secondaryColor,
   },
 }
 

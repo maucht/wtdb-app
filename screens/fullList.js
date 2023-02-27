@@ -74,7 +74,6 @@ class FullListScreen extends Component {
             this.setState({fullList:true})
             this.setState({listLoaded:fullList})
         })
-        console.log("../assets/ammoIcons/"+ammoIconMap.get("HE"))
     }
     findAmmoIcon(ammoType){
         if(!ammoIconMap.has(ammoType)){
@@ -124,11 +123,14 @@ class FullListScreen extends Component {
                                             <TouchableHighlight onPress={(shell)=>this.shellClicked(data)}>
                                             <View key = {data.Id} width={'90%'} left={'5%'} backgroundColor="rgb(30,30,30)" style={{flex:1}} paddingBottom={'10%'} borderWidth={0.2} borderColor="rgb(20,20,20)">
                                                 <Text style = {styles.shellNameText}>{data.ShellName}</Text>
-                                                <Text style = {styles.shellTypeText}>{data.ShellType} {data.ShellCaliber != null ? data.ShellCaliber+"mm" : ""}</Text>
+                                                <Text style = {styles.shellTypeText}>
+                                                    {data.ShellType}
+                                                    {data.ShellCaliber != null ? " "+data.ShellCaliber : ""}
+                                                    {data.ShellSecondCaliber != null ? "/"+data.ShellSecondCaliber : ""}mm
+                                                </Text>
                                                 <Image source ={this.findAmmoIcon(data.ShellType)} marginLeft={'10%'} marginTop={'10%'} style = {styles.ammoImage}/>
                                             </View>
                                             </TouchableHighlight>
-                                            
                                             )
                                         }
                                 })
