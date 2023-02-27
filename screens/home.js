@@ -48,7 +48,7 @@ class HomeScreen extends Component {
     this.loadFonts()
   }
 
-  handleCatNavPress(navIndex=0){
+  handleCatNavPress(navIndex=0){ // make one of these a bombing chart for air rb
     const navMap = new Map([
       [0,"Search"],
       [1,"FullList"],

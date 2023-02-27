@@ -90,7 +90,7 @@ class FullListScreen extends Component {
         console.log("SHELL CLICKED",shell.ShellName)
         this.props.navigation.navigate("Shell",{shell})
     }
-    render() {
+    render() { // should default filter to alphabetical
         switch(this.state.fontsLoaded){
             case(true):
                 if(this.state.listLoaded){
@@ -124,7 +124,7 @@ class FullListScreen extends Component {
                                             <TouchableHighlight onPress={(shell)=>this.shellClicked(data)}>
                                             <View key = {data.Id} width={'90%'} left={'5%'} backgroundColor="rgb(30,30,30)" style={{flex:1}} paddingBottom={'10%'} borderWidth={0.2} borderColor="rgb(20,20,20)">
                                                 <Text style = {styles.shellNameText}>{data.ShellName}</Text>
-                                                <Text style = {styles.shellTypeText}>{data.ShellType} {data.ShellCaliber}mm</Text>
+                                                <Text style = {styles.shellTypeText}>{data.ShellType} {data.ShellCaliber != null ? data.ShellCaliber+"mm" : ""}</Text>
                                                 <Image source ={this.findAmmoIcon(data.ShellType)} marginLeft={'10%'} marginTop={'10%'} style = {styles.ammoImage}/>
                                             </View>
                                             </TouchableHighlight>
