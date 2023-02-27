@@ -185,11 +185,12 @@ const styles = {
     fontSize: vh/46,
   },
   shellPenStatsHeader:{
+    position:'absolute',
     alignSelf:'center',
     color:'rgb(245,245,245)',
     fontSize:vh/40,
     fontFamily:'Nunito-bold',
-    marginTop:vh/26,
+    marginTop:vh/1.8,
   },
   shellPenStats:{
     position:'absolute',

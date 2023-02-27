@@ -5,6 +5,7 @@ import TopRibbon from '../components/topRibbon'
 import BackArrow from '../components/backArrow'
 import * as Font from 'expo-font'
 import {FontAwesome} from '@expo/vector-icons'
+import {Entypo} from '@expo/vector-icons'
 
 import { promiseFullList } from '../backend/fetchTable'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
@@ -89,6 +90,16 @@ class FullListScreen extends Component {
         console.log("SHELL CLICKED",shell.ShellName)
         this.props.navigation.navigate("Shell",{shell})
     }
+    handleSearchClick(){
+        console.log("SEARCH CLICKED")
+    }
+    searchIcon(){
+        return(
+            <View marginLeft = {vw/1.2} size={32} marginTop = {'-9%'} onStartShouldSetResponder={()=>this.handleSearchClick()}>
+                <Entypo name = {"magnifying-glass"} color = {'white'} size = {40}/>
+            </View>
+        )
+    }
     render() { // should default filter to alphabetical
         switch(this.state.fontsLoaded){
             case(true):
@@ -99,6 +110,7 @@ class FullListScreen extends Component {
             
                         <TopRibbon header={"Full"}/>
                         <BackArrow screenToNavigate = "Home" marginTop="10%"/>
+                        {this.searchIcon()}
                         <View style = {styles.dropdown1}  onStartShouldSetResponder={()=>this.setState({dropdown1Toggle: !this.state.dropdown1Toggle})}>
                             <Text style={styles.dropdownText}>Filter</Text>
                             <View marginLeft={vw/1.15} marginTop={-vh/30}>
