@@ -9,6 +9,7 @@ import {Entypo} from '@expo/vector-icons'
 
 import { promiseFullList } from '../backend/fetchTable'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
+import { SearchBar } from 'react-native-elements'
 
 
 const vw = Dimensions.get('window').width
@@ -55,6 +56,9 @@ class FullListScreen extends Component {
         listLoaded:false,
         fullList:null,
         dropdown1Toggle:false,
+        searchBarToggle:false,
+
+        searchValue:"",
         listStartIndex:0, // Tick up by 10 or so every page turn
     }
 
@@ -90,8 +94,30 @@ class FullListScreen extends Component {
         console.log("SHELL CLICKED",shell.ShellName)
         this.props.navigation.navigate("Shell",{shell})
     }
+    filterView(){
+        return(
+        <View style = {styles.dropdown1}  onStartShouldSetResponder={()=>this.setState({dropdown1Toggle: !this.state.dropdown1Toggle, searchBarToggle:false})}>
+        <Text style={styles.dropdownText}>Filter</Text>
+        <View marginLeft={vw/1.15} marginTop={-vh/30}>
+            <FontAwesome name={this.state.dropdown1Toggle==true ? "angle-up":"angle-down"} color="white" size={30}/>
+        </View>
+        </View> )
+    }
+    searchView(){
+        switch(this.state.searchBarToggle){
+            case(true):
+            return(
+                <SearchBar round = {true} value = {this.state.searchValue} onChangeText = {(search)=>this.setState({searchValue:search})}onCancel = {()=>this.setState({searchBarToggle:false})}/>
+            )
+            break;
+            case(false):
+            break;
+
+        }
+    }
     handleSearchClick(){
         console.log("SEARCH CLICKED")
+        this.setState({searchBarToggle:!this.state.searchBarToggle, dropdown1Toggle:false})
     }
     searchIcon(){
         return(
@@ -107,21 +133,18 @@ class FullListScreen extends Component {
                     console.log(this.state.fullList)
                     return (
                         <View style = {styles.homeContainer}>
-            
+                        
                         <TopRibbon header={"Full"}/>
                         <BackArrow screenToNavigate = "Home" marginTop="10%"/>
                         {this.searchIcon()}
-                        <View style = {styles.dropdown1}  onStartShouldSetResponder={()=>this.setState({dropdown1Toggle: !this.state.dropdown1Toggle})}>
-                            <Text style={styles.dropdownText}>Filter</Text>
-                            <View marginLeft={vw/1.15} marginTop={-vh/30}>
-                                <FontAwesome name={this.state.dropdown1Toggle==true ? "angle-up":"angle-down"} color="white" size={30}/>
-                            </View>
-                        </View>
+                        {!this.state.searchBarToggle ? this.filterView():<></>}
+                        {this.searchView()}
                         <View height={'100%'} style={{flex:2}}>
                         <ScrollView marginTop={20}>
                             {
                                 this.state.listLoaded.map((data)=>{ // There is a limit to load amount. Use pages to solve
                                     // console.log(data) use to test that every shell is being caught
+                                    if(data.ShellName.includes(this.state.searchValue.toUpperCase())){
                                     switch(ammoIconMap.has(data.ShellType)){
                                         case(false):
                                             return(
@@ -145,11 +168,8 @@ class FullListScreen extends Component {
                                             </TouchableHighlight>
                                             )
                                         }
-                                })
+                                }})
                             }
-                            <View>
-                                <Text>Page</Text>
-                            </View>
                         </ScrollView>
                         
                         </View>

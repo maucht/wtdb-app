@@ -199,6 +199,7 @@ const styles = {
     marginTop:'140%',
     alignSelf:'center',
     borderWidth:4,
+    borderColor:'rgb(20,20,20)',
     justifyContent:'center',
     paddingBottom:'5%',
     paddingLeft:'5%',
