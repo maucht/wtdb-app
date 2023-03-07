@@ -1,7 +1,7 @@
 import { Dimensions, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { useFonts } from 'expo-font'
-import {secondaryColor} from '../assets/colorPallette.js'
+import {secondaryColor} from '../assets/constants.js'
 
 const vw = Dimensions.get('window').width
 const vh = Dimensions.get('window').height
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     pageRibbon:{
         width:'100%',
         height:'10%',
-        justifyContent:'center',
+        justifyContent:'center', 
         backgroundColor:'rgb(30,30,30)'
     
     },

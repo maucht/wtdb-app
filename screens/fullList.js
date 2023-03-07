@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {Text,View, Dimensions, ScrollView, Image, Touchable, TouchableHighlight} from 'react-native'
+import {Text,View, Dimensions, ScrollView, Image, Touchable, TouchableHighlight, TouchableWithoutFeedback} from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import TopRibbon from '../components/topRibbon'
 import BackArrow from '../components/backArrow'
@@ -8,44 +8,13 @@ import {FontAwesome} from '@expo/vector-icons'
 import {Entypo} from '@expo/vector-icons'
 
 import { promiseFullList } from '../backend/fetchTable'
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { SearchBar } from 'react-native-elements'
+
+import { ammoIconMap } from '../assets/constants'
 
 
 const vw = Dimensions.get('window').width
 const vh = Dimensions.get('window').height
-
-
-
-const ammoIconMap = new Map([
-    ["HE",require("../assets/ammoIcons/HE_icon.png")],
-    ["AP",require("../assets/ammoIcons/AP_icon.png")],
-    ["APHE",require("../assets/ammoIcons/APHE.png")],
-    ["AC",require("../assets/ammoIcons/AC_icon.png")],
-    ["APBC",require("../assets/ammoIcons/APBC_icon.png")],
-    ["APC",require("../assets/ammoIcons/APC_icon.png")],
-    ["APCBC",require("../assets/ammoIcons/APCBC_icon.png")],
-    ["APCR",require("../assets/ammoIcons/APCR_icon.png")],
-    ["APDS",require("../assets/ammoIcons/APDS_icon.png")],
-    ["APFSDS",require("../assets/ammoIcons/APFSDS_icon.png")],
-    ["APHECBC",require("../assets/ammoIcons/APHECBC_icon.png")],
-    ["ATGM",require("../assets/ammoIcons/ATGM_icon.png")],
-    ["ATGM-HE",require("../assets/ammoIcons/ATGM-HE_icon.png")],
-    ["ATGM-OTA",require("../assets/ammoIcons/ATGM-OTA_icon.png")],
-    ["ATGM-TANDEM",require("../assets/ammoIcons/ATGM-Tandem_Icon.png")],
-    ["ATGM-VT",require("../assets/ammoIcons/ATGM-VT_icon.png")],
-    ["HEAT",require("../assets/ammoIcons/HEAT_icon.png")],
-    ["HEATFS",require("../assets/ammoIcons/HEATFS_icon.png")],
-    ["HEATFS-VT",require("../assets/ammoIcons/HEATFS-VT_icon.png")],
-    ["HEAT-GRENADE",require("../assets/ammoIcons/HEAT-Grenade_icon.png")],
-    ["HE-GRENADE",require("../assets/ammoIcons/HE-Grenade_icon.png")],
-    ["HESH",require("../assets/ammoIcons/HESH_icon.png")],
-    ["HE-TF",require("../assets/ammoIcons/HE-TF_icon.png")],
-    ["HE-VT",require("../assets/ammoIcons/HE-VT_icon.png")],
-    ["ROCKET",require("../assets/ammoIcons/Rocket_icon.png")],
-    ["SHRAPNEL",require("../assets/ammoIcons/Shrapnel_icon.png")],
-    ["VOG",require("../assets/ammoIcons/VOG_icon.png")],
-])
 
 
 var fullList=new Map();
@@ -101,16 +70,64 @@ class FullListScreen extends Component {
         <View marginLeft={vw/1.15} marginTop={-vh/30}>
             <FontAwesome name={this.state.dropdown1Toggle==true ? "angle-up":"angle-down"} color="white" size={30}/>
         </View>
-        </View> )
+        </View> 
+        )
+    }
+    fullFilterView(){
+        return(
+            <View style = {styles.fullFilterView}>
+                <TouchableWithoutFeedback onPress={()=>console.log("clicked ammo filter")}>
+                    <View>
+                        <Text>Shell Type</Text>
+                    </View>
+                </TouchableWithoutFeedback>
+            </View>
+        )
+    }
+    handleSearchCancel(){ // this never fires
+        console.log("cANNY")
+        if(this.searchBar!=null){
+            this.searchBar.blur()
+        }
+        
     }
     searchView(){
         switch(this.state.searchBarToggle){
             case(true):
             return(
-                <SearchBar round = {true} value = {this.state.searchValue} onChangeText = {(search)=>this.setState({searchValue:search})}onCancel = {()=>this.setState({searchBarToggle:false})}/>
+                <>
+                <SearchBar 
+                round = {true} 
+                showCancel={null}
+                platform = {"default"}
+                value = {this.state.searchValue} 
+                onChangeText = {(search)=>this.setState({searchValue:search})}
+                onCancel = {this.handleSearchCancel}
+                containerStyle = {styles.searchBarContainer}
+                inputContainerStyle = {styles.searchBarInner}
+                cancelButtonTitle="Cancel"
+                ref={(searchBar) => { this.searchBar = searchBar; }}
+                />
+                </>
             )
             break;
             case(false):
+            return(
+                <>
+                <SearchBar 
+                round = {true} 
+                showCancel={null}
+                platform = {"default"}
+                value = {this.state.searchValue} 
+                onChangeText = {(search)=>this.setState({searchValue:search})}
+                onCancel = {this.handleSearchCancel}
+                containerStyle = {styles.searchBarContainer}
+                inputContainerStyle = {styles.searchBarInner}
+                cancelButtonTitle="Cancel"
+                ref={(searchBar) => { this.searchBar = searchBar; }}
+                />
+                </>
+            )
             break;
 
         }
@@ -136,15 +153,16 @@ class FullListScreen extends Component {
                         
                         <TopRibbon header={"Full"}/>
                         <BackArrow screenToNavigate = "Home" marginTop="10%"/>
-                        {this.searchIcon()}
-                        {!this.state.searchBarToggle ? this.filterView():<></>}
-                        {this.searchView()}
+                        
+                        {this.filterView()}
+                        {this.state.dropdown1Toggle ? this.fullFilterView():<></>}
+                        {!this.state.dropdown1Toggle? this.searchView():<></>}
                         <View height={'100%'} style={{flex:2}}>
                         <ScrollView marginTop={20}>
                             {
                                 this.state.listLoaded.map((data)=>{ // There is a limit to load amount. Use pages to solve
                                     // console.log(data) use to test that every shell is being caught
-                                    if(data.ShellName.includes(this.state.searchValue.toUpperCase())){
+                                    if(data.ShellName.toLowerCase().includes(this.state.searchValue.toLowerCase())){
                                     switch(ammoIconMap.has(data.ShellType)){
                                         case(false):
                                             return(
@@ -242,6 +260,22 @@ const styles = {
         height:vh/20,
         width:vh/20,
         borderRadius:6,
+    },
+    searchBarContainer:{
+        width:'95%',
+        marginTop:'2.5%',
+        alignSelf:'center',
+        borderRadius:6,
+        backgroundColor:'rgb(30,30,30)'
+    },
+    searchBarInner:{
+        width:'90%',
+        alignSelf:'center',
+    },
+    fullFilterView:{
+        width:'100%',
+        height:'30%',
+        backgroundColor:'rgb(30,30,30)'
     },
 }
 export default FullListScreen;

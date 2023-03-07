@@ -10,11 +10,11 @@ import axios from 'axios'
 
 import { Svg } from 'react-native-svg'
 import bullets from '../assets/svg/Bullets.svg'
-import {secondaryColor} from '../assets/colorPallette.js'
+import {secondaryColor} from '../assets/constants.js'
 
 import { promiseFullList } from '../backend/fetchTable'
 
-
+ 
 
 const vw = Dimensions.get('window').width
 const vh = Dimensions.get('window').height
