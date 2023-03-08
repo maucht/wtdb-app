@@ -10,7 +10,7 @@ import {Entypo} from '@expo/vector-icons'
 import { promiseFullList } from '../backend/fetchTable'
 import { CheckBox, SearchBar } from 'react-native-elements'
 
-import { ammoIconMap } from '../assets/constants'
+import { ammoIconMap, secondaryColor } from '../assets/constants'
 
 
 const vw = Dimensions.get('window').width
@@ -28,6 +28,11 @@ class FullListScreen extends Component {
         searchBarToggle:false,
 
         searchValue:"",
+
+        filterTypeChecked:false,
+        filterCaliberChecked:false,
+        filterTraitsChecked:false,
+        filterNationChecked:false,
         listStartIndex:0, // Tick up by 10 or so every page turn
     }
 
@@ -77,31 +82,66 @@ class FullListScreen extends Component {
         return(
             <View style = {styles.fullFilterView}>
                 <View style = {styles.filterTouchableView}>
-                    <TouchableWithoutFeedback style = {styles.filterTouchable} onPress={()=>console.log("clicked ammo filter")}>
-                        <View>
-                            <Text style={styles.filterByShell}>Shell Type</Text>
-                        </View>
-                    </TouchableWithoutFeedback>
+                    <View style={styles.checkBoxView}>
+                    <CheckBox
+                    iconRight
+                    title="Shell Type"
+                    containerStyle={styles.checkBoxContainer}
+                    textStyle={styles.checkBoxText1}
+                    checked = {this.state.filterTypeChecked}
+                    onPress = {()=>this.setState({filterTypeChecked:!this.state.filterTypeChecked})}
+                    checkedIcon = {"check-square-o"}
+                    checkedColor={secondaryColor}
+                    />
+                    </View>
                 </View>
+
                 <View style = {styles.filterTouchableView}>
-                <TouchableWithoutFeedback style={styles.filterTouchable}>
-                    <View>
-                        <Text style={styles.filterByShell}>Caliber</Text>
+                    <View style = {styles.checkBoxView}>
+                    <CheckBox
+                    iconRight
+                    title="Caliber"
+                    containerStyle={styles.checkBoxContainer}
+                    textStyle={styles.checkBoxText2}
+                    checked = {this.state.filterCaliberChecked}
+                    onPress = {()=>this.setState({filterCaliberChecked:!this.state.filterCaliberChecked})}
+                    checkedIcon = {"check-square-o"}
+                    checkedColor={secondaryColor}
+                    />
                     </View>
-                </TouchableWithoutFeedback>
+
                 </View>
+
                 <View style = {styles.filterTouchableView}>
-                <TouchableWithoutFeedback style={styles.filterTouchable}>
-                    <View>
-                        <Text style = {styles.filterByShell}>Explosive</Text>
+                    <View style = {styles.checkBoxView}>
+                    <CheckBox
+                    iconRight
+                    title="Traits"
+                    containerStyle={styles.checkBoxContainer}
+                    textStyle={styles.checkBoxText3}
+                    checked = {this.state.filterTraitsChecked}
+                    onPress = {()=>this.setState({filterTraitsChecked:!this.state.filterTraitsChecked})}
+                    checkedIcon = {"check-square-o"}
+                    checkedColor={secondaryColor}
+                    />
                     </View>
-                </TouchableWithoutFeedback></View>
+
+                </View>
+
                 <View style = {styles.filterTouchableView}>
-                <TouchableWithoutFeedback style={styles.filterTouchable}>
-                    <View>
-                        <Text style = {styles.filterByShell}>Nation</Text>
+                    <View style={styles.checkBoxView}>
+                    <CheckBox
+                    iconRight
+                    title="Nation"
+                    containerStyle={styles.checkBoxContainer}
+                    textStyle={styles.checkBoxText4}
+                    checked = {this.state.filterNationChecked}
+                    onPress = {()=>this.setState({filterNationChecked:!this.state.filterNationChecked})} // fire a popup menu when pressed
+                    checkedIcon = {"check-square-o"}
+                    checkedColor={secondaryColor}
+                    />
                     </View>
-                </TouchableWithoutFeedback>
+
                 </View>
 
             </View>
@@ -306,10 +346,49 @@ const styles = {
         color:'white',
         fontFamily:'Nunito-extra-bold'
     },
+    checkBoxView:{
+        height:'100%',
+        width:'90%',
+        alignSelf:'center',
+        justifyContent:'center',
+        //backgroundColor:'red',
+        flex:1
+    },
     filterTouchableView:{
-        height:'10%',
-        marginTop:'5%',
+        height:'30%',
+        paddingTop:'-30%',
+        marginTop:'0%',
+        flex:1,
 
+    },
+    checkBoxContainer:{
+        height:'80%',
+        width:'90%',
+        backgroundColor:'rgb(30,30,30)',
+    },
+    checkBoxText1:{
+        color:'white',
+        fontFamily:'Nunito-bold',
+        fontSize:vh/70,
+        paddingRight:vw/2
+    },
+    checkBoxText2:{
+        color:'white',
+        fontFamily:'Nunito-bold',
+        fontSize:vh/70,
+        paddingRight:vw/1.855
+        },
+    checkBoxText3:{
+        color:'white',
+        fontFamily:'Nunito-bold',
+        fontSize:vh/70,
+        paddingRight:vw/1.8
+    },
+    checkBoxText4:{
+        color:'white',
+        fontFamily:'Nunito-bold',
+        fontSize:vh/70,
+        paddingRight:vw/1.84
     },
 }
 export default FullListScreen;
