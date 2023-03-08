@@ -8,7 +8,7 @@ import {FontAwesome} from '@expo/vector-icons'
 import {Entypo} from '@expo/vector-icons'
 
 import { promiseFullList } from '../backend/fetchTable'
-import { SearchBar } from 'react-native-elements'
+import { CheckBox, SearchBar } from 'react-native-elements'
 
 import { ammoIconMap } from '../assets/constants'
 
@@ -76,11 +76,34 @@ class FullListScreen extends Component {
     fullFilterView(){
         return(
             <View style = {styles.fullFilterView}>
-                <TouchableWithoutFeedback onPress={()=>console.log("clicked ammo filter")}>
+                <View style = {styles.filterTouchableView}>
+                    <TouchableWithoutFeedback style = {styles.filterTouchable} onPress={()=>console.log("clicked ammo filter")}>
+                        <View>
+                            <Text style={styles.filterByShell}>Shell Type</Text>
+                        </View>
+                    </TouchableWithoutFeedback>
+                </View>
+                <View style = {styles.filterTouchableView}>
+                <TouchableWithoutFeedback style={styles.filterTouchable}>
                     <View>
-                        <Text>Shell Type</Text>
+                        <Text style={styles.filterByShell}>Caliber</Text>
                     </View>
                 </TouchableWithoutFeedback>
+                </View>
+                <View style = {styles.filterTouchableView}>
+                <TouchableWithoutFeedback style={styles.filterTouchable}>
+                    <View>
+                        <Text style = {styles.filterByShell}>Explosive</Text>
+                    </View>
+                </TouchableWithoutFeedback></View>
+                <View style = {styles.filterTouchableView}>
+                <TouchableWithoutFeedback style={styles.filterTouchable}>
+                    <View>
+                        <Text style = {styles.filterByShell}>Nation</Text>
+                    </View>
+                </TouchableWithoutFeedback>
+                </View>
+
             </View>
         )
     }
@@ -276,6 +299,17 @@ const styles = {
         width:'100%',
         height:'30%',
         backgroundColor:'rgb(30,30,30)'
+    },
+    filterByShell:{
+        marginLeft:'10%',
+        fontSize:vh/44,
+        color:'white',
+        fontFamily:'Nunito-extra-bold'
+    },
+    filterTouchableView:{
+        height:'10%',
+        marginTop:'5%',
+
     },
 }
 export default FullListScreen;
