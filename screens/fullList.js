@@ -58,6 +58,7 @@ class FullListScreen extends Component {
             this.setState({fullList:true})
             this.setState({listLoaded:fullList})
         })
+
     }
     findAmmoIcon(ammoType){
         if(!ammoIconMap.has(ammoType)){
@@ -84,29 +85,38 @@ class FullListScreen extends Component {
         )
     }
     filterMenuPopUp(filterType){
+        let data=[]
         console.info("popup")
         if(this.state.openFilterPopUpMenu && this.state.listLoaded){
             console.log("OPEN POPUP")
+            this.state.listLoaded.map((object)=>{
+                data.push(object.ShellType)
+            })
+            data.sort()
+            console.warn("DATAS LENGTH:",data.length)
+            for(var q=0;q<data.length;++q){
+                console.log("HERES DATA:",data[q])
+                if(typeMap.has(data[q])){
+                }
+                else{
+                    typeMap.set(data[q],data[q])
+                }
+            }
             return(
                         <View style = {styles.containerPopUpMenu}>
                             <View style = {styles.innerPopUpMenu}>
                                 <Text style={styles.filterPopUpMenuHeader}>Filter: {filterType}</Text>
                                 <View style = {styles.anotherFilterContainerForScroll}>
                                 <ScrollView style={styles.filterScrollView} contentContainerStyle={{flexGrow:0}}>
-                                    {this.state.listLoaded.map((object)=>{ // replace with this.state.listLoaded
-                                        if(typeMap.has(object.ShellType)){
-                                            return
-                                        }
-                                        else{
-                                        console.log("FILTER MAP:",object.ShellType)
-                                        typeMap.set(object.ShellType,object.ShellName)
+                                    {typeMap.forEach(function(object){ // replace with this.state.listLoaded
+                                        console.log("TYPEMAP:",object)
                                         return(
-                                        <View style={styles.filterScrollOption} key = {object.ShellType}>
-                                            <Text>{object.ShellType}</Text>
+                                        <View style={styles.filterScrollOption} key={object}>
+                                            <Text>{object}</Text>
                                         </View>
                                         )
                                         }
-                                    })}
+                                    )}
 
                                 </ScrollView>
                                 </View>
@@ -115,7 +125,6 @@ class FullListScreen extends Component {
             )
         }
         else{
-            typeMap.clear()
             return
 
         }
