@@ -86,6 +86,7 @@ class FullListScreen extends Component {
     }
     filterMenuPopUp(filterType){
         let data=[]
+        let parsedData=[]
         console.info("popup")
         if(this.state.openFilterPopUpMenu && this.state.listLoaded){
             console.log("OPEN POPUP")
@@ -100,6 +101,7 @@ class FullListScreen extends Component {
                 }
                 else{
                     typeMap.set(data[q],data[q])
+                    parsedData.push(data[q])
                 }
             }
             return(
@@ -108,7 +110,7 @@ class FullListScreen extends Component {
                                 <Text style={styles.filterPopUpMenuHeader}>Filter: {filterType}</Text>
                                 <View style = {styles.anotherFilterContainerForScroll}>
                                 <ScrollView style={styles.filterScrollView} contentContainerStyle={{flexGrow:0}}>
-                                    {typeMap.forEach(function(object){ // replace with this.state.listLoaded
+                                    {parsedData.map((object)=>{ // replace with this.state.listLoaded
                                         console.log("TYPEMAP:",object)
                                         return(
                                         <View style={styles.filterScrollOption} key={object}>
@@ -473,16 +475,18 @@ const styles = {
         height:vh,
         width:vw,
         alignItems:'center',
-        backgroundColor:'red'
+        backgroundColor:'rgb(20,20,20)'
     },
     filterPopUpMenuHeader:{
         color:'white',
         fontFamily:'Nunito-bold',
+        marginBottom:'5%',
         fontSize:vh/30
     },
     innerPopUpMenu:{
-        backgroundColor:'blue',
+        backgroundColor:'rgb(30,30,30)',
         alignItems:'center',
+        paddingTop:'5%',
         marginTop:vh/12,
         height:vh/1.6,
         width:vw/1.2,
@@ -494,10 +498,15 @@ const styles = {
         
     },
     filterScrollOption:{
-        height:'10%',
+        //height:'10%',
         width:'100%',
-        marginTop:'10%',
-        backgroundColor:'rgb(90,90,90)',
+        marginTop:'0%',
+        flex:1,
+        paddingTop:'7%',
+        paddingBottom:'7%',
+        borderTopWidth:0.4,
+        borderColor:'rgb(20,20,20)',
+        backgroundColor:'rgb(60,60,60)',
     },
     anotherFilterContainerForScroll:{
         height:'90%',
