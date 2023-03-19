@@ -26,6 +26,12 @@ class FullListScreen extends Component {
         fontsLoaded:false,
         listLoaded:false,
         fullList:null,
+
+        typeList:[],
+        caliberList:[],
+        traitList:[],
+        nationList:[],
+
         dropdown1Toggle:false,
         searchBarToggle:false,
 
@@ -84,17 +90,43 @@ class FullListScreen extends Component {
         </View> 
         )
     }
+    refineFilterLists(){
+        let preSortType=[]
+        let preSortCaliber=[]
+        let preSortTrait=[]
+        let preSortNaiton=[]
+
+        let typeMapSort = new Map()
+        let caliberMapSort = new Map()
+        this.state.listLoaded.map((object)=>{
+            preSortType.push(object.ShellType)
+            preSortCaliber.push(object.ShellCaliber)
+        })
+        preSortType.sort()
+        preSortCaliber.sort()
+        for(const i=0;i<preSortType.length;i++){
+            if(!typeMapSort.has(preSortType[i])){
+                typeMapSort.set(preSortType[i],preSortType[i])
+                this.setState({typeList:[...this.state.typeMap,preSortType[i]]})
+            }
+            if(!caliberMapSort.has(preSortType[i])){
+                caliberMapSort.set(preSortType[i],preSortType[i])
+                this.setState({caliberList:[...this.state.caliberList,preSortType[i]]})
+            }
+        }
+    }
     filterMenuPopUp(filterType){
         let data=[]
         let parsedData=[]
         console.info("popup")
         if(this.state.openFilterPopUpMenu && this.state.listLoaded){
-            console.log("OPEN POPUP")
+            this.refineFilterLists()
             this.state.listLoaded.map((object)=>{
                 data.push(object.ShellType)
             })
             data.sort()
             console.warn("DATAS LENGTH:",data.length)
+            if(filterType === "Shell Type"){
             for(var q=0;q<data.length;++q){
                 console.log("HERES DATA:",data[q])
                 if(typeMap.has(data[q])){
@@ -103,6 +135,16 @@ class FullListScreen extends Component {
                     typeMap.set(data[q],data[q])
                     parsedData.push(data[q])
                 }
+            }
+        }
+            if(filterType === "Caliber"){
+                
+            }
+            if(filterType === "Trait"){
+                
+            }
+            if(filterType === "Nation"){
+                
             }
             return(
                         <View style = {styles.containerPopUpMenu}>
@@ -123,6 +165,11 @@ class FullListScreen extends Component {
                                 </ScrollView>
                                 </View>
                             </View>
+                            <TouchableOpacity style = {styles.filterMenuUncheckButton}>
+                                <View style = {styles.filterMenuUncheckView}>
+                                <Text style = {styles.filterMenuUncheckText}>Uncheck All</Text>
+                                </View>
+                            </TouchableOpacity>
                         </View>
             )
         }
@@ -487,6 +534,7 @@ const styles = {
         backgroundColor:'rgb(30,30,30)',
         alignItems:'center',
         paddingTop:'5%',
+        paddingBottom:'5%',
         marginTop:vh/12,
         height:vh/1.6,
         width:vw/1.2,
@@ -512,6 +560,21 @@ const styles = {
         height:'90%',
         width:'90%',
         backgroundColor:'rgb(30,30,30)'
+    },
+    filterMenuUncheckButton:{
+    },
+    filterMenuUncheckView:{
+        backgroundColor:'rgb(30,30,30)',
+        height:vh/20,
+        width:vw/3.5,
+        alignItems:'center',
+        justifyContent:'center',
+        marginLeft:'40%',
+        marginTop:'10%',
+    },
+    filterMenuUncheckText:{
+        fontFamily:'Nunito-extra-bold',
+        color:'white',
     },
 }
 export default FullListScreen;
