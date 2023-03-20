@@ -58,6 +58,7 @@ class FullListScreen extends Component {
         this.setState({fontsLoaded:true})
         }
     componentDidMount(){
+        console.info("COMPONENT DID MOUNT, FONTS LOADED, FULL LIST LOADED")
         this.loadFonts()
         promiseFullList().then((data)=>{
             fullList = data
@@ -91,10 +92,14 @@ class FullListScreen extends Component {
         )
     }
     refineFilterLists(){
+        let i=0
         let preSortType=[]
         let preSortCaliber=[]
         let preSortTrait=[]
         let preSortNaiton=[]
+
+        let refinedType = []
+        let refinedCaliber = []
 
         let typeMapSort = new Map()
         let caliberMapSort = new Map()
@@ -104,55 +109,34 @@ class FullListScreen extends Component {
         })
         preSortType.sort()
         preSortCaliber.sort()
-        for(const i=0;i<preSortType.length;i++){
-            if(!typeMapSort.has(preSortType[i])){
+        for(i=0;i<preSortType.length;i++){
+            if(!(typeMapSort.has(preSortType[i]))){ // this puts only the last type in the state
+                console.log("SETTING IN TYPELIST:",preSortType[i])
+                refinedType.push(preSortType[i])
                 typeMapSort.set(preSortType[i],preSortType[i])
-                this.setState({typeList:[...this.state.typeMap,preSortType[i]]})
             }
-            if(!caliberMapSort.has(preSortType[i])){
-                caliberMapSort.set(preSortType[i],preSortType[i])
-                this.setState({caliberList:[...this.state.caliberList,preSortType[i]]})
+            this.setState({typeList:refinedType})
+        }
+        for(i=0;i<preSortCaliber.length;i++){
+            if(!caliberMapSort.has(preSortCaliber[i])){
+                refinedCaliber.push(preSortCaliber[i])
+                caliberMapSort.set(preSortCaliber[i],preSortCaliber[i])
             }
+            this.setState({caliberList:refinedCaliber})
         }
     }
     filterMenuPopUp(filterType){
-        let data=[]
-        let parsedData=[]
         console.info("popup")
         if(this.state.openFilterPopUpMenu && this.state.listLoaded){
-            this.refineFilterLists()
-            this.state.listLoaded.map((object)=>{
-                data.push(object.ShellType)
-            })
-            data.sort()
-            console.warn("DATAS LENGTH:",data.length)
-            if(filterType === "Shell Type"){
-            for(var q=0;q<data.length;++q){
-                console.log("HERES DATA:",data[q])
-                if(typeMap.has(data[q])){
-                }
-                else{
-                    typeMap.set(data[q],data[q])
-                    parsedData.push(data[q])
-                }
-            }
-        }
-            if(filterType === "Caliber"){
-                
-            }
-            if(filterType === "Trait"){
-                
-            }
-            if(filterType === "Nation"){
-                
-            }
+            console.info("SHOULD RUN FILTER MENU MAPPING. SIZE OF TYPELIST:",this.state.typeList.length) // TURN THIS INTO A JEST TEST
+            console.info("TYPELIST[0]:",this.state.typeList[0])
             return(
                         <View style = {styles.containerPopUpMenu}>
                             <View style = {styles.innerPopUpMenu}>
                                 <Text style={styles.filterPopUpMenuHeader}>Filter: {filterType}</Text>
                                 <View style = {styles.anotherFilterContainerForScroll}>
                                 <ScrollView style={styles.filterScrollView} contentContainerStyle={{flexGrow:0}}>
-                                    {parsedData.map((object)=>{ // replace with this.state.listLoaded
+                                    {this.state.typeList.map((object)=>{ // replace with this.state.listLoaded
                                         console.log("TYPEMAP:",object)
                                         return(
                                         <View style={styles.filterScrollOption} key={object}>
@@ -179,6 +163,7 @@ class FullListScreen extends Component {
         }
     }
     handleFilterBoxCheck(boxName){
+        this.refineFilterLists()
         this.setState({openFilterPopUpMenu:!this.state.openFilterPopUpMenu})
         switch(boxName){
             case("type"):
