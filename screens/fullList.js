@@ -44,6 +44,8 @@ class FullListScreen extends Component {
         currentFilter:"",
 
         openFilterPopUpMenu:false,
+        filteredTypes:[],
+
         listStartIndex:0, // Tick up by 10 or so every page turn
     }
 
@@ -90,6 +92,28 @@ class FullListScreen extends Component {
         </View>
         </View> 
         )
+    }
+    handleFilterBoxCheck(category, filter){
+        switch(category){
+            case("Shell Type"):
+                let checkMapFilters = new Map()
+                if(this.state.filteredTypes.length>0){
+                    for(let k=0;i<this.state.filteredTypes.length;++k){
+                        if(!checkMapFilters.has(this.state.filteredTypes[k])){
+                            checkMapFilters.set(this.state.filteredTypes[k],this.state.filteredTypes[k])
+                        }
+                    }
+            }
+                if(!checkMapFilters.has(filter)){
+                    let stateArray = []
+                    stateArray = this.state.filteredTypes
+                    stateArray.push(filter)
+                    this.setState({filteredTypes:stateArray})
+                }
+                console.log("FILTERED TYPES:",this.state.filteredTypes)
+                break
+
+        }
     }
     refineFilterLists(){
         let i=0
@@ -139,9 +163,11 @@ class FullListScreen extends Component {
                                     {this.state.typeList.map((object)=>{ // replace with this.state.listLoaded
                                         console.log("TYPEMAP:",object)
                                         return(
+                                        <TouchableWithoutFeedback delayLongPress={150} onPress = {null} onLongPress = {(category,filter)=>this.handleFilterBoxCheck("Shell Type", object)}>
                                         <View style={styles.filterScrollOption} key={object}>
-                                            <Text>{object}</Text>
+                                            <Text style={styles.filterScrollOptionText}>{object}</Text>
                                         </View>
+                                        </TouchableWithoutFeedback>
                                         )
                                         }
                                     )}
@@ -560,6 +586,15 @@ const styles = {
     filterMenuUncheckText:{
         fontFamily:'Nunito-extra-bold',
         color:'white',
+    },
+    filterScrollOptionText:{
+        color:'white',
+        fontFamily:'Nunito-bold',
+        paddingLeft:'5%'
+    },
+    filterOptionCheckboxContainer:{
+        width:'10%',
+        paddingTop:'100%'
     },
 }
 export default FullListScreen;
