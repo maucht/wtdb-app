@@ -21,6 +21,8 @@ const vh = Dimensions.get('window').height
 var fullList=new Map();
 var typeMap = new Map();
 const dummyData = [1,2,3]
+
+let checkMapFilters = new Map()
 class FullListScreen extends Component {
     state = {
         fontsLoaded:false,
@@ -45,6 +47,9 @@ class FullListScreen extends Component {
 
         openFilterPopUpMenu:false,
         filteredTypes:[],
+
+        filterMenuScrollActive:false, // this doesn't work for the first time trying to scroll on this page
+                                    // so in the function that handles adding a filter option to the saved state, check if scrolling
 
         listStartIndex:0, // Tick up by 10 or so every page turn
     }
@@ -96,19 +101,14 @@ class FullListScreen extends Component {
     handleFilterBoxCheck(category, filter){
         switch(category){
             case("Shell Type"):
-                let checkMapFilters = new Map()
-                if(this.state.filteredTypes.length>0){
-                    for(let k=0;i<this.state.filteredTypes.length;++k){
-                        if(!checkMapFilters.has(this.state.filteredTypes[k])){
-                            checkMapFilters.set(this.state.filteredTypes[k],this.state.filteredTypes[k])
-                        }
-                    }
-            }
                 if(!checkMapFilters.has(filter)){
                     let stateArray = []
                     stateArray = this.state.filteredTypes
                     stateArray.push(filter)
+                    console.info("STATE ARRAY:",stateArray)
                     this.setState({filteredTypes:stateArray})
+                    console.info("NEW ITEM ADDED TO CHECKMAPFILTERS:",filter)
+                    checkMapFilters.set(filter,filter)
                 }
                 console.log("FILTERED TYPES:",this.state.filteredTypes)
                 break
@@ -149,6 +149,20 @@ class FullListScreen extends Component {
             this.setState({caliberList:refinedCaliber})
         }
     }
+    handleFilterMenuScroll(){
+        this.setState({filterMenuScrollActive:true})
+    }
+    handleFilterMenuStopScroll(){
+        this.setState({filterMenuScrollActive:false})
+    }
+    checkIfAlreadyInFilter(toCheck){
+        for(i=0;i<this.state.filteredTypes.length;++i){
+            if(this.state.filteredTypes[i]==toCheck){
+                return true
+            }
+        }
+        return false
+    }
     filterMenuPopUp(filterType){
         console.info("popup")
         if(this.state.openFilterPopUpMenu && this.state.listLoaded){
@@ -159,11 +173,18 @@ class FullListScreen extends Component {
                             <View style = {styles.innerPopUpMenu}>
                                 <Text style={styles.filterPopUpMenuHeader}>Filter: {filterType}</Text>
                                 <View style = {styles.anotherFilterContainerForScroll}>
-                                <ScrollView style={styles.filterScrollView} contentContainerStyle={{flexGrow:0}}>
+                                <ScrollView style={styles.filterScrollView} contentContainerStyle={{flexGrow:0}}
+                                    onScrollBeginDrag = {()=>this.handleFilterMenuScroll}
+                                    onScrollEndDrag = {()=>this.handleFilterMenuStopScroll}
+                                    onMomentumScrollBegin = {()=>this.handleFilterMenuScroll}
+                                    onMomentumScrollEnd = {() => this.handleFilterMenuStopScroll}
+                                >
                                     {this.state.typeList.map((object)=>{ // replace with this.state.listLoaded
                                         console.log("TYPEMAP:",object)
+                                        console.log("CURRENT FILTERED TYPES:",this.state.filteredTypes)
+                                        console.info("FILTER SCROLL STATUS:",this.state.filterMenuScrollActive)
                                         return(
-                                        <TouchableWithoutFeedback delayLongPress={150} onPress = {null} onLongPress = {(category,filter)=>this.handleFilterBoxCheck("Shell Type", object)}>
+                                        <TouchableWithoutFeedback delayLongPress={40} onPress = {null} onLongPress = {(!this.state.filterMenuScrollActive && !this.state.filteredTypes.includes(object))? (category, filter)=>this.handleFilterBoxCheck("Shell Type", object):null}>
                                         <View style={styles.filterScrollOption} key={object}>
                                             <Text style={styles.filterScrollOptionText}>{object}</Text>
                                         </View>
