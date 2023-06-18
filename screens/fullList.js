@@ -99,7 +99,9 @@ class FullListScreen extends Component {
                     }
 
                 }
-                
+            }
+            for(let i = 0; i < this.state.filterShellTypeObjects.length; i ++){
+                this.state.filterShellTypeObjects[i].index = i
             }
             //this.state.filterShellTypeObjects[0].filterChecked = true // test check for AP
             return(
@@ -123,7 +125,16 @@ class FullListScreen extends Component {
                                             <Text style = {styles.filterType}>{typeObj.name}
                                             <Checkbox
                                             value = {typeObj.filterChecked}
-                                            onStartShouldSetResponder={()=>typeObj.filterChecked = true}
+                                            onValueChange={()=>{
+                                                let tempTypeArray = this.state.filterShellTypeObjects
+                                                tempTypeArray[typeObj.index].filterChecked = !this.state.filterShellTypeObjects[typeObj.index].filterChecked
+                                                this.setState({
+                                                    filterShellTypeObjects: tempTypeArray
+                                                })
+                                                console.log("INDEX:",typeObj.index)
+                                                console.log("NAME:",typeObj.name)
+                                            }
+                                            }
                                             />
                                             </Text>
 
