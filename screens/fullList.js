@@ -14,6 +14,7 @@ import { SearchBar } from 'react-native-elements'
 import Checkbox from 'expo-checkbox';
 
 import { ammoIconMap } from '../assets/constants'
+import Shell from './shell'
 
 
 const vw = Dimensions.get('window').width
@@ -22,7 +23,11 @@ const vh = Dimensions.get('window').height
 
 
 
-
+class ShellTypeObj{
+    index;
+    name;
+    filterChecked;
+}
 
 var fullList=new Map();
 
@@ -35,11 +40,12 @@ class FullListScreen extends Component {
         searchBarToggle:false,
 
         iterateFilterTypeHash: new Map(),
+        filterShellTypeObjects: [],
+        loadedFilterTypes:false,
         lastIteratedFilterItem: null,
         searchValue:"",
         listStartIndex:0, // Tick up by 10 or so every page turn
     }
-
     async loadFonts(){
         await Font.loadAsync({
             'Nunito-regular': require('../assets/fonts/NunitoSans-Regular.ttf'),
@@ -72,12 +78,6 @@ class FullListScreen extends Component {
         console.log("SHELL CLICKED",shell.ShellName)
         this.props.navigation.navigate("Shell",{shell})
     }
-    addToFilterTypes(shellType){
-        console.log("ADDING TYPE:",shellType)
-        this.setState({
-            iterateFilterTypeHash:this.state.iterateFilterTypeHash.set(shellType,1)
-        })
-    }
     filterView(){
         if(this.state.dropdown1Toggle == false){
             return(
@@ -89,6 +89,19 @@ class FullListScreen extends Component {
             </View> )
         }
         else{
+            // i implemented this bubble sort all by myself from scratch. very proud.
+            for(let i = 0; i < (this.state.filterShellTypeObjects.length) - 1; i ++){
+                for(let j = i + 1; j < this.state.filterShellTypeObjects.length; j ++){
+                    if(this.state.filterShellTypeObjects[j].name.charAt(0) < this.state.filterShellTypeObjects[i].name.charAt(0)){
+                        let temp = this.state.filterShellTypeObjects[j]
+                        this.state.filterShellTypeObjects[j] = this.state.filterShellTypeObjects[i]
+                        this.state.filterShellTypeObjects[i] = temp
+                    }
+
+                }
+                
+            }
+            //this.state.filterShellTypeObjects[0].filterChecked = true // test check for AP
             return(
                 <View style = {styles.dropdown1Open} >
                 <Text style={styles.dropdownText} onStartShouldSetResponder={()=>this.setState({dropdown1Toggle: !this.state.dropdown1Toggle, searchBarToggle:false
@@ -96,7 +109,6 @@ class FullListScreen extends Component {
                 })}>Filter</Text>
                 <View marginLeft={vw/1.15} marginTop={-vh/30} onStartShouldSetResponder={()=>
                     this.setState({dropdown1Toggle: !this.state.dropdown1Toggle, searchBarToggle:false,
-                        iterateFilterTypeHash: new Map()
                     
                     })}>
                     <FontAwesome name={this.state.dropdown1Toggle==true ? "angle-up":"angle-down"} color="white" size={30}/>
@@ -105,12 +117,13 @@ class FullListScreen extends Component {
                 <View height={'100%'} style={{flex:2}}>
                         <ScrollView marginTop={20}>
                             {
-                                Array.from(this.state.iterateFilterTypeHash.keys()).map((typeString)=>{
+                                this.state.filterShellTypeObjects.map((typeObj)=>{
                                     return(
-                                        <View>
-                                            <Text style = {styles.filterType}>{typeString}
+                                        <View key ={typeObj.name}>
+                                            <Text style = {styles.filterType}>{typeObj.name}
                                             <Checkbox
-                                            style = {{}}
+                                            value = {typeObj.filterChecked}
+                                            onStartShouldSetResponder={()=>typeObj.filterChecked = true}
                                             />
                                             </Text>
 
@@ -202,10 +215,15 @@ class FullListScreen extends Component {
                             {
                                 this.state.listLoaded.map((data)=>{ // There is a limit to load amount. Use pages to solve
                                     // console.log(data) use to test that every shell is being caught
-                                    // TESTING not working
-                                    if(!this.state.iterateFilterTypeHash.has(data.ShellType)){
+                                    // TESTING
+                                    if(!this.state.iterateFilterTypeHash.has(data.ShellType) && !this.state.loadedTypes){
                                         this.state.iterateFilterTypeHash.set(data.ShellType,1)
                                         console.log("APPENDING NEW TYPE:",data.ShellType)
+                                        
+                                        let currObj = new ShellTypeObj()
+                                        currObj.name = data.ShellType
+                                        currObj.filterChecked = false
+                                        this.state.filterShellTypeObjects.push(currObj)
                                     }
                                     // TESTING END
 
@@ -234,6 +252,12 @@ class FullListScreen extends Component {
                                             )
                                         }
                                 }})
+                            }
+                            {
+                                ()=>{this.setState({
+                                    loadedFilterTypes:true
+                                })
+                            }
                             }
                         </ScrollView>
                         
