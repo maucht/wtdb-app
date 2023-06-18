@@ -14,7 +14,7 @@ import {secondaryColor} from '../assets/constants.js'
 
 import { promiseFullList } from '../backend/fetchTable'
 
- 
+
 
 const vw = Dimensions.get('window').width
 const vh = Dimensions.get('window').height
@@ -68,21 +68,21 @@ class HomeScreen extends Component {
     
             <SafeAreaView style = {styles.homeContainer}>
               <View style = {styles.homeCategories}>
-                <View style={styles.categoryOne} onStartShouldSetResponder={(navIndex)=>this.handleCatNavPress(0)}>
-                  <Text style = {styles.categoryText}>Search</Text>
-                  <View marginTop={'-8%'} marginLeft={'11%'}><Entypo name = {'magnifying-glass'} size={vh/14} color={secondaryColor}/></View>
+                <View style={styles.categoryOne} /*onStartShouldSetResponder={(navIndex)=>this.handleCatNavPress(0)}*/>
+                  <Text style = {styles.categoryTextDisabled}>Search</Text>
+                  <View marginTop={'-8%'} marginLeft={'11%'}><Entypo name = {'magnifying-glass'} size={vh/14} color={'rgb(80,80,80)'}/></View>
                 </View>
                 <View style = {styles.categoryTwo} onStartShouldSetResponder={(navIndex) => this.handleCatNavPress(1)}>
                   <Text style = {styles.categoryText}>Full{`\n`}List</Text>
                   <View marginTop = {'-16%'} marginLeft={'11%'}><Entypo name = "book" color = {secondaryColor} size={vh/14}/></View>
                 </View>
-                <View style = {styles.categoryThree} onStartShouldSetResponder={(navIndex) => this.handleCatNavPress(2)}>
+                <View style = {styles.categoryThree} /*onStartShouldSetResponder={(navIndex) => this.handleCatNavPress(2)}*/>
                   <Text style = {styles.categoryText}>By Tech Tree</Text>
                   <View marginTop='-8%' marginLeft='12%'><Entypo name="flag" color={secondaryColor} size = {vh/14}/></View>
                 </View>
-                <View style = {styles.categoryFour} onStartShouldSetResponder={(navIndex) => this.handleCatNavPress(3)}>
-                  <Text style = {styles.categoryText}>More</Text>
-                  <View marginTop = {'-8%'} marginLeft={'12%'} ><Entypo name = {'dots-three-horizontal'} color={secondaryColor} size = {vh/14}/></View>
+                <View style = {styles.categoryFour} /*onStartShouldSetResponder={(navIndex) => this.handleCatNavPress(3)}*/>
+                  <Text style = {styles.categoryTextDisabled}>More</Text>
+                  <View marginTop = {'-8%'} marginLeft={'12%'} ><Entypo name = {'dots-three-horizontal'} color={"rgb(80,80,80)"} size = {vh/14}/></View>
                 </View>
               </View>
             </SafeAreaView>
@@ -152,6 +152,17 @@ const styles = StyleSheet.create({
 
   categoryText:{
     color:secondaryColor,
+    alignSelf:'flex-start',
+    fontFamily:'Nunito-extra-bold',
+    fontSize:vw/19,
+    justifyContent:'center',
+    textAlign:'center',
+
+    marginLeft:'55%',
+    marginTop:'12%',
+  },
+  categoryTextDisabled:{
+    color:"rgb(80,80,80)",
     alignSelf:'flex-start',
     fontFamily:'Nunito-extra-bold',
     fontSize:vw/19,

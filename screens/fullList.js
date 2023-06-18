@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {Text,View, Dimensions, ScrollView, Image, Touchable, TouchableHighlight, TouchableWithoutFeedback,TouchableOpacity} from 'react-native'
+import {Text,View, Dimensions, ScrollView, Image, Touchable, TouchableHighlight} from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import TopRibbon from '../components/topRibbon'
 import BackArrow from '../components/backArrow'
@@ -8,49 +8,35 @@ import {FontAwesome} from '@expo/vector-icons'
 import {Entypo} from '@expo/vector-icons'
 
 import { promiseFullList } from '../backend/fetchTable'
-import { CheckBox, SearchBar } from 'react-native-elements'
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
+import { SearchBar } from 'react-native-elements'
 
-import { ammoIconMap, secondaryColor } from '../assets/constants'
-import { Menu } from 'react-native-popup-menu'
+import Checkbox from 'expo-checkbox';
+
+import { ammoIconMap } from '../assets/constants'
 
 
 const vw = Dimensions.get('window').width
 const vh = Dimensions.get('window').height
 
 
-var fullList=new Map();
-var typeMap = new Map();
-const dummyData = [1,2,3]
 
-let checkMapFilters = new Map()
+
+
+
+var fullList=new Map();
+
 class FullListScreen extends Component {
     state = {
         fontsLoaded:false,
         listLoaded:false,
         fullList:null,
-
-        typeList:[],
-        caliberList:[],
-        traitList:[],
-        nationList:[],
-
         dropdown1Toggle:false,
         searchBarToggle:false,
 
+        iterateFilterTypeHash: new Map(),
+        lastIteratedFilterItem: null,
         searchValue:"",
-
-        filterTypeChecked:false,
-        filterCaliberChecked:false,
-        filterTraitsChecked:false,
-        filterNationChecked:false,
-        currentFilter:"",
-
-        openFilterPopUpMenu:false,
-        filteredTypes:[],
-
-        filterMenuScrollActive:false, // this doesn't work for the first time trying to scroll on this page
-                                    // so in the function that handles adding a filter option to the saved state, check if scrolling
-
         listStartIndex:0, // Tick up by 10 or so every page turn
     }
 
@@ -65,14 +51,12 @@ class FullListScreen extends Component {
         this.setState({fontsLoaded:true})
         }
     componentDidMount(){
-        console.info("COMPONENT DID MOUNT, FONTS LOADED, FULL LIST LOADED")
         this.loadFonts()
         promiseFullList().then((data)=>{
             fullList = data
             this.setState({fullList:true})
             this.setState({listLoaded:fullList})
         })
-
     }
     findAmmoIcon(ammoType){
         if(!ammoIconMap.has(ammoType)){
@@ -88,222 +72,60 @@ class FullListScreen extends Component {
         console.log("SHELL CLICKED",shell.ShellName)
         this.props.navigation.navigate("Shell",{shell})
     }
-    filterView(){
-        return(
-        <View style = {styles.dropdown1}  onStartShouldSetResponder={()=>this.setState({dropdown1Toggle: !this.state.dropdown1Toggle, searchBarToggle:false})}>
-        <Text style={styles.dropdownText}>Filter</Text>
-        <View marginLeft={vw/1.15} marginTop={-vh/30}>
-            <FontAwesome name={this.state.dropdown1Toggle==true ? "angle-up":"angle-down"} color="white" size={30}/>
-        </View>
-        </View> 
-        )
-    }
-    handleFilterBoxCheck(category, filter){
-        switch(category){
-            case("Shell Type"):
-                if(!checkMapFilters.has(filter)){
-                    let stateArray = []
-                    stateArray = this.state.filteredTypes
-                    stateArray.push(filter)
-                    console.info("STATE ARRAY:",stateArray)
-                    this.setState({filteredTypes:stateArray})
-                    console.info("NEW ITEM ADDED TO CHECKMAPFILTERS:",filter)
-                    checkMapFilters.set(filter,filter)
-                }
-                console.log("FILTERED TYPES:",this.state.filteredTypes)
-                break
-
-        }
-    }
-    refineFilterLists(){
-        let i=0
-        let preSortType=[]
-        let preSortCaliber=[]
-        let preSortTrait=[]
-        let preSortNaiton=[]
-
-        let refinedType = []
-        let refinedCaliber = []
-
-        let typeMapSort = new Map()
-        let caliberMapSort = new Map()
-        this.state.listLoaded.map((object)=>{
-            preSortType.push(object.ShellType)
-            preSortCaliber.push(object.ShellCaliber)
+    addToFilterTypes(shellType){
+        console.log("ADDING TYPE:",shellType)
+        this.setState({
+            iterateFilterTypeHash:this.state.iterateFilterTypeHash.set(shellType,1)
         })
-        preSortType.sort()
-        preSortCaliber.sort()
-        for(i=0;i<preSortType.length;i++){
-            if(!(typeMapSort.has(preSortType[i]))){ // this puts only the last type in the state
-                console.log("SETTING IN TYPELIST:",preSortType[i])
-                refinedType.push(preSortType[i])
-                typeMapSort.set(preSortType[i],preSortType[i])
-            }
-            this.setState({typeList:refinedType})
-        }
-        for(i=0;i<preSortCaliber.length;i++){
-            if(!caliberMapSort.has(preSortCaliber[i])){
-                refinedCaliber.push(preSortCaliber[i])
-                caliberMapSort.set(preSortCaliber[i],preSortCaliber[i])
-            }
-            this.setState({caliberList:refinedCaliber})
-        }
     }
-    handleFilterMenuScroll(){
-        this.setState({filterMenuScrollActive:true})
-    }
-    handleFilterMenuStopScroll(){
-        this.setState({filterMenuScrollActive:false})
-    }
-    checkIfAlreadyInFilter(toCheck){
-        for(i=0;i<this.state.filteredTypes.length;++i){
-            if(this.state.filteredTypes[i]==toCheck){
-                return true
-            }
-        }
-        return false
-    }
-    filterMenuPopUp(filterType){
-        console.info("popup")
-        if(this.state.openFilterPopUpMenu && this.state.listLoaded){
-            console.info("SHOULD RUN FILTER MENU MAPPING. SIZE OF TYPELIST:",this.state.typeList.length) // TURN THIS INTO A JEST TEST
-            console.info("TYPELIST[0]:",this.state.typeList[0])
+    filterView(){
+        if(this.state.dropdown1Toggle == false){
             return(
-                        <View style = {styles.containerPopUpMenu}>
-                            <View style = {styles.innerPopUpMenu}>
-                                <Text style={styles.filterPopUpMenuHeader}>Filter: {filterType}</Text>
-                                <View style = {styles.anotherFilterContainerForScroll}>
-                                <ScrollView style={styles.filterScrollView} contentContainerStyle={{flexGrow:0}}
-                                    onScrollBeginDrag = {()=>this.handleFilterMenuScroll}
-                                    onScrollEndDrag = {()=>this.handleFilterMenuStopScroll}
-                                    onMomentumScrollBegin = {()=>this.handleFilterMenuScroll}
-                                    onMomentumScrollEnd = {() => this.handleFilterMenuStopScroll}
-                                >
-                                    {this.state.typeList.map((object)=>{ // replace with this.state.listLoaded
-                                        console.log("TYPEMAP:",object)
-                                        console.log("CURRENT FILTERED TYPES:",this.state.filteredTypes)
-                                        console.info("FILTER SCROLL STATUS:",this.state.filterMenuScrollActive)
-                                        return(
-                                        <TouchableWithoutFeedback delayLongPress={40} onPress = {null} onLongPress = {(!this.state.filterMenuScrollActive && !this.state.filteredTypes.includes(object))? (category, filter)=>this.handleFilterBoxCheck("Shell Type", object):null}>
-                                        <View style={styles.filterScrollOption} key={object}>
-                                            <Text style={styles.filterScrollOptionText}>{object}</Text>
-                                        </View>
-                                        </TouchableWithoutFeedback>
-                                        )
-                                        }
-                                    )}
-
-                                </ScrollView>
-                                </View>
-                            </View>
-                            <TouchableOpacity style = {styles.filterMenuUncheckButton}>
-                                <View style = {styles.filterMenuUncheckView}>
-                                <Text style = {styles.filterMenuUncheckText}>Uncheck All</Text>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-            )
+            <View style = {styles.dropdown1}  onStartShouldSetResponder={()=>this.setState({dropdown1Toggle: !this.state.dropdown1Toggle, searchBarToggle:false})}>
+            <Text style={styles.dropdownText}>Filter</Text>
+            <View marginLeft={vw/1.15} marginTop={-vh/30}>
+                <FontAwesome name={this.state.dropdown1Toggle==true ? "angle-up":"angle-down"} color="white" size={30}/>
+            </View>
+            </View> )
         }
         else{
-            return
+            return(
+                <View style = {styles.dropdown1Open} >
+                <Text style={styles.dropdownText} onStartShouldSetResponder={()=>this.setState({dropdown1Toggle: !this.state.dropdown1Toggle, searchBarToggle:false
+                , iterateFilterTypeHash: new Map()
+                })}>Filter</Text>
+                <View marginLeft={vw/1.15} marginTop={-vh/30} onStartShouldSetResponder={()=>
+                    this.setState({dropdown1Toggle: !this.state.dropdown1Toggle, searchBarToggle:false,
+                        iterateFilterTypeHash: new Map()
+                    
+                    })}>
+                    <FontAwesome name={this.state.dropdown1Toggle==true ? "angle-up":"angle-down"} color="white" size={30}/>
+                </View>
+                
+                <View height={'100%'} style={{flex:2}}>
+                        <ScrollView marginTop={20}>
+                            {
+                                Array.from(this.state.iterateFilterTypeHash.keys()).map((typeString)=>{
+                                    return(
+                                        <View>
+                                            <Text style = {styles.filterType}>{typeString}
+                                            <Checkbox
+                                            style = {{}}
+                                            />
+                                            </Text>
 
+                                        </View>
+                                        )
+                                })
+                            }
+                        </ScrollView>
+                        
+                        </View>
+
+                </View> )
+            }
         }
-    }
-    handleFilterBoxCheck(boxName){
-        this.refineFilterLists()
-        this.setState({openFilterPopUpMenu:!this.state.openFilterPopUpMenu})
-        switch(boxName){
-            case("type"):
-            this.setState({filterTypeChecked:!this.state.filterTypeChecked}) // these should call different popup menus
-            this.setState({currentFilter:"Shell Type"})
-            break
-            case("caliber"):
-            this.setState({filterCaliberChecked:!this.state.filterCaliberChecked})
-            this.setState({currentFilter:"Caliber"})
-            break
-            case("traits"):
-            this.setState({filterTraitsChecked:!this.state.filterTraitsChecked})
-            this.setState({currentFilter:"Trait"})
-            break
-            case("nation"):
-            this.setState({filterNationChecked:!this.state.filterNationChecked})
-            this.setState({currentFilter:"Nation"})
-            break
-            default:
-                break
-        }
-        
-    }
-    fullFilterView(){
-        return(
-            <View style = {styles.fullFilterView}>
-                <View style = {styles.filterTouchableView}>
-                    <View style={styles.checkBoxView}>
-                    <CheckBox
-                    iconRight
-                    title="Shell Type"
-                    containerStyle={styles.checkBoxContainer}
-                    textStyle={styles.checkBoxText1}
-                    checked = {this.state.filterTypeChecked}
-                    onPress = {(boxName)=>this.handleFilterBoxCheck("type")}
-                    checkedIcon = {"check-square-o"}
-                    checkedColor={secondaryColor}
-                    />
-                    </View>
-                </View>
-
-                <View style = {styles.filterTouchableView}>
-                    <View style = {styles.checkBoxView}>
-                    <CheckBox
-                    iconRight
-                    title="Caliber"
-                    containerStyle={styles.checkBoxContainer}
-                    textStyle={styles.checkBoxText2}
-                    checked = {this.state.filterCaliberChecked}
-                    onPress = {(boxName)=>this.handleFilterBoxCheck("caliber")}
-                    checkedIcon = {"check-square-o"}
-                    checkedColor={secondaryColor}
-                    />
-                    </View>
-
-                </View>
-
-                <View style = {styles.filterTouchableView}>
-                    <View style = {styles.checkBoxView}>
-                    <CheckBox
-                    iconRight
-                    title="Traits"
-                    containerStyle={styles.checkBoxContainer}
-                    textStyle={styles.checkBoxText3}
-                    checked = {this.state.filterTraitsChecked}
-                    onPress = {(boxName)=>this.handleFilterBoxCheck("traits")}
-                    checkedIcon = {"check-square-o"}
-                    checkedColor={secondaryColor}
-                    />
-                    </View>
-
-                </View>
-
-                <View style = {styles.filterTouchableView}>
-                    <View style={styles.checkBoxView}>
-                    <CheckBox
-                    iconRight
-                    title="Nation"
-                    containerStyle={styles.checkBoxContainer}
-                    textStyle={styles.checkBoxText4}
-                    checked = {this.state.filterNationChecked}
-                    onPress = {(boxName)=>this.handleFilterBoxCheck("nation")} // fire a popup menu when pressed
-                    checkedIcon = {"check-square-o"}
-                    checkedColor={secondaryColor}
-                    />
-                    </View>
-
-                </View>
-
-            </View>
-        )
-    }
-    handleSearchCancel(){ // this never fires
+    handleSearchCancel(){
         console.log("cANNY")
         if(this.searchBar!=null){
             this.searchBar.blur()
@@ -368,20 +190,25 @@ class FullListScreen extends Component {
                 if(this.state.listLoaded){
                     console.log(this.state.fullList)
                     return (
-                        <>
                         <View style = {styles.homeContainer}>
                         
                         <TopRibbon header={"Full"}/>
-                        {this.filterMenuPopUp(this.state.currentFilter)}
                         <BackArrow screenToNavigate = "Home" marginTop="10%"/>
-                        {this.filterView()}
-                        {this.state.dropdown1Toggle ? this.fullFilterView():<></>}
-                        {!this.state.dropdown1Toggle? this.searchView():<></>}
+                        
+                        {!this.state.searchBarToggle ? this.filterView():<></>}
+                        {this.searchView()}
                         <View height={'100%'} style={{flex:2}}>
                         <ScrollView marginTop={20}>
                             {
-                                this.state.listLoaded.map((data)=>{
+                                this.state.listLoaded.map((data)=>{ // There is a limit to load amount. Use pages to solve
                                     // console.log(data) use to test that every shell is being caught
+                                    // TESTING not working
+                                    if(!this.state.iterateFilterTypeHash.has(data.ShellType)){
+                                        this.state.iterateFilterTypeHash.set(data.ShellType,1)
+                                        console.log("APPENDING NEW TYPE:",data.ShellType)
+                                    }
+                                    // TESTING END
+
                                     if(data.ShellName.toLowerCase().includes(this.state.searchValue.toLowerCase())){
                                     switch(ammoIconMap.has(data.ShellType)){
                                         case(false):
@@ -413,7 +240,6 @@ class FullListScreen extends Component {
                         </View>
             
                         </View>
-                        </>
                 )
                     }
                     else{
@@ -451,13 +277,25 @@ const styles = {
         borderTopColor:'rgb(0,0,0)',
         borderBottomWidth:0,
         bordertopWidth:2,
-        justifyContent:'center',
+        //justifyContent:'center',
+        
+    },
+    dropdown1Open:{
+        height:'40%',
+        width:'100%',
+        marginTop:'0%',
+        backgroundColor:'rgb(30,30,30)',
+        borderTopColor:'rgb(0,0,0)',
+        borderBottomWidth:0,
+        bordertopWidth:2,
+        //justifyContent:'center',
         
     },
     dropdownText:{
         fontFamily:'Nunito-extra-bold',
         color:'white',
         marginLeft:vw/15,
+        marginTop:vh/40,
         fontSize:vh/30
     },
     shellNameText:{
@@ -493,129 +331,14 @@ const styles = {
         width:'90%',
         alignSelf:'center',
     },
-    fullFilterView:{
-        width:'100%',
-        height:'30%',
-        backgroundColor:'rgb(30,30,30)'
-    },
-    filterByShell:{
-        marginLeft:'10%',
-        fontSize:vh/44,
-        color:'white',
-        fontFamily:'Nunito-extra-bold'
-    },
-    checkBoxView:{
-        height:'100%',
-        width:'90%',
-        alignSelf:'center',
-        justifyContent:'center',
-        //backgroundColor:'red',
-        flex:1
-    },
-    filterTouchableView:{
-        height:'30%',
-        paddingTop:'-30%',
-        marginTop:'0%',
-        flex:1,
 
-    },
-    checkBoxContainer:{
-        height:'80%',
-        width:'90%',
-        backgroundColor:'rgb(30,30,30)',
-    },
-    checkBoxText1:{
+    filterType:{
         color:'white',
-        fontFamily:'Nunito-bold',
-        fontSize:vh/70,
-        paddingRight:vw/2
-    },
-    checkBoxText2:{
-        color:'white',
-        fontFamily:'Nunito-bold',
-        fontSize:vh/70,
-        paddingRight:vw/1.855
-        },
-    checkBoxText3:{
-        color:'white',
-        fontFamily:'Nunito-bold',
-        fontSize:vh/70,
-        paddingRight:vw/1.8
-    },
-    checkBoxText4:{
-        color:'white',
-        fontFamily:'Nunito-bold',
-        fontSize:vh/70,
-        paddingRight:vw/1.84
-    },
-    containerPopUpMenu:{
-        backgroundColor:'rgb(30,30,30)',
-        elevation:1000,
-        height:vh,
-        width:vw,
-        alignItems:'center',
-        backgroundColor:'rgb(20,20,20)'
-    },
-    filterPopUpMenuHeader:{
-        color:'white',
-        fontFamily:'Nunito-bold',
-        marginBottom:'5%',
-        fontSize:vh/30
-    },
-    innerPopUpMenu:{
-        backgroundColor:'rgb(30,30,30)',
-        alignItems:'center',
-        paddingTop:'5%',
-        paddingBottom:'5%',
-        marginTop:vh/12,
-        height:vh/1.6,
-        width:vw/1.2,
-        flex:0.7,
-    },
-    filterScrollView:{
-        backgroundColor:'rgb(0,0,0)', 
-        borderColor:'green',
-        
-    },
-    filterScrollOption:{
-        //height:'10%',
-        width:'100%',
-        marginTop:'0%',
-        flex:1,
-        paddingTop:'7%',
-        paddingBottom:'7%',
-        borderTopWidth:0.4,
-        borderColor:'rgb(20,20,20)',
-        backgroundColor:'rgb(60,60,60)',
-    },
-    anotherFilterContainerForScroll:{
-        height:'90%',
-        width:'90%',
-        backgroundColor:'rgb(30,30,30)'
-    },
-    filterMenuUncheckButton:{
-    },
-    filterMenuUncheckView:{
-        backgroundColor:'rgb(30,30,30)',
-        height:vh/20,
-        width:vw/3.5,
-        alignItems:'center',
-        justifyContent:'center',
-        marginLeft:'40%',
-        marginTop:'10%',
-    },
-    filterMenuUncheckText:{
         fontFamily:'Nunito-extra-bold',
-        color:'white',
-    },
-    filterScrollOptionText:{
-        color:'white',
-        fontFamily:'Nunito-bold',
-        paddingLeft:'5%'
-    },
-    filterOptionCheckboxContainer:{
-        width:'10%',
-        paddingTop:'100%'
+        fontSize:vw/27,
+        marginBottom:'5%',
+        marginLeft:'10%'
+
     },
 }
 export default FullListScreen;
