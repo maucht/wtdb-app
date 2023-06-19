@@ -260,7 +260,8 @@ class FullListScreen extends Component {
                                     }
                                     // TESTING END
 
-                                    if(data.ShellName.toLowerCase().includes(this.state.searchValue.toLowerCase())){
+                                    if(data.ShellName.toLowerCase().includes(this.state.searchValue.toLowerCase()) 
+                                    && (this.state.allFilterChecks.length === 0 || this.state.allFilterChecks.includes(data.ShellType))){
                                     switch(ammoIconMap.has(data.ShellType)){
                                         case(false):
                                             return(
@@ -270,6 +271,7 @@ class FullListScreen extends Component {
                                             </View>
                                     )
                                         case(true):
+                                                
                                             return(
                                             <TouchableHighlight onPress={(shell)=>this.shellClicked(data)}>
                                             <View key = {data.Id} width={'90%'} left={'5%'} backgroundColor="rgb(30,30,30)" style={{flex:1}} paddingBottom={'10%'} borderWidth={0.2} borderColor="rgb(20,20,20)">
