@@ -39,7 +39,7 @@ class FullListScreen extends Component {
         dropdown1Toggle:false,
         searchBarToggle:false,
 
-        iterateFilterTypeHash: new Map(),
+        iterateFilterTypeHash: new Map(), // 1 dont filter, 2 filter
         filterShellTypeObjects: [],
         loadedFilterTypes:false,
         lastIteratedFilterItem: null,
@@ -121,9 +121,10 @@ class FullListScreen extends Component {
                             {
                                 this.state.filterShellTypeObjects.map((typeObj)=>{
                                     return(
-                                        <View key ={typeObj.name}>
+                                        <View key ={typeObj.name} style = {styles.filterRow}>
                                             <Text style = {styles.filterType}>{typeObj.name}
                                             <Checkbox
+                                            style = {styles.filterCheckbox}
                                             value = {typeObj.filterChecked}
                                             onValueChange={()=>{
                                                 let tempTypeArray = this.state.filterShellTypeObjects
@@ -131,8 +132,6 @@ class FullListScreen extends Component {
                                                 this.setState({
                                                     filterShellTypeObjects: tempTypeArray
                                                 })
-                                                console.log("INDEX:",typeObj.index)
-                                                console.log("NAME:",typeObj.name)
                                             }
                                             }
                                             />
@@ -372,8 +371,21 @@ const styles = {
         fontFamily:'Nunito-extra-bold',
         fontSize:vw/27,
         marginBottom:'5%',
-        marginLeft:'10%'
+        marginLeft:'10%',
+        paddingRight:10
+        
 
+    },
+    filterRow:{
+        
+        
+        
+    },
+    filterCheckbox:{
+        transform: [{translateX: 10}],
+        top:0,
+        left:0,
+        position:'absolute'
     },
 }
 export default FullListScreen;
