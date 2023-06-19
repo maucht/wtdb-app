@@ -42,7 +42,7 @@ class FullListScreen extends Component {
         iterateFilterTypeHash: new Map(), // 1 dont filter, 2 filter
         filterShellTypeObjects: [],
         loadedFilterTypes:false,
-        lastIteratedFilterItem: null,
+        allFilterChecks:[],
         searchValue:"",
         listStartIndex:0, // Tick up by 10 or so every page turn
     }
@@ -63,6 +63,15 @@ class FullListScreen extends Component {
             this.setState({fullList:true})
             this.setState({listLoaded:fullList})
         })
+
+        for(const [key,value] of Object.entries(this.state.iterateFilterTypeHash)){
+            if(value === 2){
+                console.log("HEY FILTER THIS:",key)
+            }
+        }
+
+
+
     }
     findAmmoIcon(ammoType){
         if(!ammoIconMap.has(ammoType)){
@@ -128,10 +137,24 @@ class FullListScreen extends Component {
                                             value = {typeObj.filterChecked}
                                             onValueChange={()=>{
                                                 let tempTypeArray = this.state.filterShellTypeObjects
+                                                let tempIterateMap = this.state.iterateFilterTypeHash
                                                 tempTypeArray[typeObj.index].filterChecked = !this.state.filterShellTypeObjects[typeObj.index].filterChecked
+                                                tempIterateMap[typeObj.name] = 2
                                                 this.setState({
-                                                    filterShellTypeObjects: tempTypeArray
-                                                })
+                                                    filterShellTypeObjects: tempTypeArray,
+                                                    iterateFilterTypeHash:tempIterateMap
+                                                },()=>{
+                                                    let tempCheckedTypes = []
+                                                    for(let i = 0; i < this.state.filterShellTypeObjects.length; i ++){
+                                                        if(this.state.filterShellTypeObjects[i].filterChecked === true){
+                                                            tempCheckedTypes.push(this.state.filterShellTypeObjects[i].name)
+                                                        }
+                                                    }
+                                                    this.setState({
+                                                        allFilterChecks:tempCheckedTypes
+                                                    },()=>{console.log(this.state.allFilterChecks)})})
+
+                                                // IMPLEMENT A FOR LOOP ITERATING THROUGH ALL OBJECTS, CHECK WHICH BOXES ARE CHECKED. ALSO REMEMBER TO UNSET CHECKED.
                                             }
                                             }
                                             />
