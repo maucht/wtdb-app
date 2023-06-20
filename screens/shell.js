@@ -115,7 +115,7 @@ class Shell extends Component {
 
   }
 }
-
+const responsivePenBox = vh < 800 ? "140%" : "100%"
 const styles = {
   homeContainer:{
     height:'100%',
@@ -162,13 +162,13 @@ const styles = {
     color:'rgb(245,245,245)',
     fontSize:vh/40,
     fontFamily:'Nunito-bold',
-    marginTop:vh/1.8,
+    marginTop:responsivePenBox,
   },
-  shellPenStats:{
+  shellPenStats:{ // not responsive currently
     position:'absolute',
     width:'100%',
     height:'25%',
-    marginTop:'140%',
+    marginTop:responsivePenBox,
     alignSelf:'center',
     borderWidth:4,
     borderColor:'rgb(20,20,20)',

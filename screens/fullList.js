@@ -254,7 +254,7 @@ class FullListScreen extends Component {
                                     // TESTING
                                     if(!this.state.iterateFilterTypeHash.has(data.ShellType) && !this.state.loadedTypes){
                                         this.state.iterateFilterTypeHash.set(data.ShellType,1)
-                                        console.log("APPENDING NEW TYPE:",data.ShellType)
+            
                                         
                                         let currObj = new ShellTypeObj()
                                         currObj.name = data.ShellType
@@ -341,6 +341,7 @@ const styles = {
         borderTopColor:'rgb(0,0,0)',
         borderBottomWidth:0,
         bordertopWidth:2,
+        elevation:1
         //justifyContent:'center',
         
     },
