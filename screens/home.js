@@ -56,7 +56,7 @@ class HomeScreen extends Component {
       [3,"Search"],
     ])
     console.log("SHOULD NAVIGATE TO INDEX",navMap.get(navIndex))
-    this.props.navigation.navigate(navMap.get(navIndex))
+    this.props.navigation.navigate(navMap.get(navIndex),{})
   }
 
   render() { // IDEA: Bump "ALl ammunitions" up 1 and merge the search feature into that. Add a category called "Advanced Search" to replace it

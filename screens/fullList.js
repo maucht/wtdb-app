@@ -33,6 +33,8 @@ var fullList=new Map();
 
 class FullListScreen extends Component {
     state = {
+        natNav:this.props.route.params.nation,
+
         fontsLoaded:false,
         listLoaded:false,
         fullList:null,
@@ -63,14 +65,7 @@ class FullListScreen extends Component {
             this.setState({fullList:true})
             this.setState({listLoaded:fullList})
         })
-
-        for(const [key,value] of Object.entries(this.state.iterateFilterTypeHash)){
-            if(value === 2){
-                console.log("HEY FILTER THIS:",key)
-            }
-        }
-
-
+        console.log("NAVIGATING FROM:",this.state.natNav)
 
     }
     findAmmoIcon(ammoType){
@@ -230,6 +225,14 @@ class FullListScreen extends Component {
             </View>
         )
     }
+    codifyNatName(nationRaw){
+        const natNameMap = new Map([
+            ["United States", "USA"],
+            ["Germany", "GER"]
+        ])
+        //console.log("COFIDYING",nationRaw,"TO", natNameMap.get(nationRaw))
+        return natNameMap.get(nationRaw)
+    }
     render() { // should default filter to alphabetical
         switch(this.state.fontsLoaded){
             case(true):
@@ -238,7 +241,7 @@ class FullListScreen extends Component {
                     return (
                         <View style = {styles.homeContainer}>
                         
-                        <TopRibbon header={"Full"}/>
+                        <TopRibbon header={this.state.natNav == undefined ? "Full" : this.state.natNav}/>
                         <BackArrow screenToNavigate = "Home" marginTop="10%"/>
                         
                         {!this.state.searchBarToggle ? this.filterView():<></>}
@@ -261,7 +264,9 @@ class FullListScreen extends Component {
                                     // TESTING END
 
                                     if(data.ShellName.toLowerCase().includes(this.state.searchValue.toLowerCase()) 
-                                    && (this.state.allFilterChecks.length === 0 || this.state.allFilterChecks.includes(data.ShellType))){
+                                    && (this.state.allFilterChecks.length === 0 || this.state.allFilterChecks.includes(data.ShellType))
+                                    && (this.state.natNav == undefined || this.codifyNatName(this.state.natNav) == data.Nation)
+                                    ){
                                     switch(ammoIconMap.has(data.ShellType)){
                                         case(false):
                                             return(
@@ -305,7 +310,7 @@ class FullListScreen extends Component {
                         return (
                             <View style = {styles.homeContainer}>
                 
-                            <TopRibbon header={"Full"}/>
+                            <TopRibbon header={this.state.natNav == undefined ? "Full" : this.state.natNav}/>
                 
                             </View>
                     )
@@ -314,7 +319,7 @@ class FullListScreen extends Component {
             case(false):
                 return(
                     <View style = {styles.homeContainer}>
-                        <TopRibbon header = {"Full"}/>
+                        <TopRibbon header={this.state.natNav == undefined ? "Full" : this.state.natNav}/>
                     </View>
                 )
         }

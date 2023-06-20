@@ -28,7 +28,7 @@ class Nations extends Component{
     this.loadFonts()
   }
   handleNatNav(nation){
-    this.props.navigation.navigate("NationWise",{nation})
+    this.props.navigation.navigate("FullList",{nation})
   }
   render() {
     if(this.state.fontsLoaded){
@@ -89,7 +89,7 @@ const styles = {
     left:vw/10,
     top:'25%',
     borderColor:'rgb(20,20,20)',
-    borderWidth:1
+    borderWidth:2
   },
   nationText:{
     color:secondaryColor,
