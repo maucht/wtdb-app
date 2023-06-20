@@ -52,7 +52,7 @@ class HomeScreen extends Component {
     const navMap = new Map([
       [0,"Search"],
       [1,"FullList"],
-      [2,"Search"],
+      [2,"Nations"],
       [3,"Search"],
     ])
     console.log("SHOULD NAVIGATE TO INDEX",navMap.get(navIndex))
@@ -76,7 +76,7 @@ class HomeScreen extends Component {
                   <Text style = {styles.categoryText}>Full{`\n`}List</Text>
                   <View marginTop = {'-16%'} marginLeft={'11%'}><Entypo name = "book" color = {secondaryColor} size={vh/14}/></View>
                 </View>
-                <View style = {styles.categoryThree} /*onStartShouldSetResponder={(navIndex) => this.handleCatNavPress(2)}*/>
+                <View style = {styles.categoryThree} onStartShouldSetResponder={(navIndex) => this.handleCatNavPress(2)}>
                   <Text style = {styles.categoryText}>By Tech Tree</Text>
                   <View marginTop='-8%' marginLeft='12%'><Entypo name="flag" color={secondaryColor} size = {vh/14}/></View>
                 </View>

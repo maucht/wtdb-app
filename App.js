@@ -7,6 +7,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import SearchScreen from './screens/search.js';
 import FullListScreen from './screens/fullList.js';
 import Shell from './screens/shell.js';
+import Nations from './screens/nations.js'
 
 const Stack = createNativeStackNavigator()
 
@@ -17,7 +18,6 @@ export default function App() {
       <Stack.Screen name="Home" component={HomeScreen}
       options ={
         {headerShown:false}
-
       }
       />
       <Stack.Screen name = "Search" component={SearchScreen}
@@ -30,6 +30,11 @@ export default function App() {
         {headerShown:false}
       }/>
       <Stack.Screen name="Shell" component = {Shell}
+      options = {
+        {headerShown:false}
+      }
+      />
+      <Stack.Screen name = "Nations" component = {Nations}
       options = {
         {headerShown:false}
       }
