@@ -27,6 +27,9 @@ class Nations extends Component{
   componentDidMount(){
     this.loadFonts()
   }
+  handleNatNav(nation){
+    this.props.navigation.navigate("NationWise",{nation})
+  }
   render() {
     if(this.state.fontsLoaded){
     return (
@@ -34,12 +37,12 @@ class Nations extends Component{
         <TopRibbon header = "Nations"/>
         <BackArrow screenToNavigate = "Home" marginTop="10%"/>
         <View style = {styles.nationContainer}>
-          <View style = {styles.nationView}>
+          <View style = {styles.nationView} onStartShouldSetResponder={(nation)=>this.handleNatNav("United States")}>
             <Image source = {require("../assets/flags/us_flag_colored.png")} style = {styles.nationFlag}/>
             <Text style = {styles.nationText}>United States</Text>
           </View>
 
-          <View style = {styles.nationView}>
+          <View style = {styles.nationView} onStartShouldSetResponder={(nation)=>this.handleNatNav("Germany")}>
             <Image source = {require("../assets/flags/ger_flag_colored.png")} style = {styles.nationFlag}/>
             <Text style = {styles.nationText}>Germany</Text>
           </View>

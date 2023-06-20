@@ -8,6 +8,7 @@ import SearchScreen from './screens/search.js';
 import FullListScreen from './screens/fullList.js';
 import Shell from './screens/shell.js';
 import Nations from './screens/nations.js'
+import NationWise from './screens/nationWise.js';
 
 const Stack = createNativeStackNavigator()
 
@@ -39,6 +40,10 @@ export default function App() {
         {headerShown:false}
       }
       />
+      <Stack.Screen name = "NationWise" component = {NationWise}
+      options = {
+        {headerShown:false}
+      }/>
     </Stack.Navigator>
     </NavigationContainer>
   );
