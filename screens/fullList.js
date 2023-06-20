@@ -15,7 +15,7 @@ import Checkbox from 'expo-checkbox';
 
 import { ammoIconMap } from '../assets/constants'
 import Shell from './shell'
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const vw = Dimensions.get('window').width
 const vh = Dimensions.get('window').height
@@ -336,7 +336,7 @@ const styles = {
     dropdown1:{
         height:'10%',
         width:'100%',
-        marginTop:'0%',
+        marginTop:'5%',
         backgroundColor:'rgb(30,30,30)',
         borderTopColor:'rgb(0,0,0)',
         borderBottomWidth:0,
@@ -348,7 +348,7 @@ const styles = {
     dropdown1Open:{
         height:'40%',
         width:'100%',
-        marginTop:'0%',
+        marginTop:'5%',
         backgroundColor:'rgb(30,30,30)',
         borderTopColor:'rgb(0,0,0)',
         borderBottomWidth:0,
@@ -361,7 +361,7 @@ const styles = {
         color:'white',
         marginLeft:vw/15,
         marginTop:vh/40,
-        fontSize:vh/30
+        fontSize:30
     },
     shellNameText:{
         fontFamily:'Nunito-extra-bold',

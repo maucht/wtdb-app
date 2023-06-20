@@ -30,11 +30,11 @@ const TopRibbon = (props) => {
 
 export default TopRibbon
 
-const responsiveRibbonHeight = vh < 800 ? "10%" : "15%" // the unit is density independent pixels. nexus 7 height = 888 dip
+const responsiveRibbonHeight = vh < 1000 && vw < 1000 ? "10%" : "15%" // the unit is density independent pixels. nexus 7 height = 888 dip
 const styles = StyleSheet.create({
     pageRibbon:{
         width:'100%',
-        height:responsiveRibbonHeight,
+        height:100, // responsiveRibbonHeight
         justifyContent:'center', 
         backgroundColor:'rgb(30,30,30)',
         elevation:10
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
         textAlign:'center',
         fontFamily:'Nunito-extra-bold',
         marginTop:vh/38,
-        fontSize:vw/15,
+        fontSize:30,
         color:secondaryColor,
         elevation:10
       },
