@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native'
 const BackArrow = (props) => {
   const navigation = useNavigation()
   return (
-    <View marginTop={'-14%'} marginLeft={'8%'} width={'18%'} elevation = {11} onStartShouldSetResponder={()=>navigation.navigate(props.screenToNavigate)}>
+    <View marginTop={-65} marginLeft={'8%'} width={'18%'} elevation = {11} onStartShouldSetResponder={()=>navigation.navigate(props.screenToNavigate)}>
       <Entypo name="arrow-with-circle-left" color="white" size={40}/>
     </View>
   )

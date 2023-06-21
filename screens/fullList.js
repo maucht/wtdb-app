@@ -58,13 +58,42 @@ class FullListScreen extends Component {
         console.log("loaded fonts")
         this.setState({fontsLoaded:true})
         }
+    async loadTestData(){
+        try{
+            await AsyncStorage.setItem("tempkey","mmmUh")
+        }
+        catch(error){
+            console.log("loadTestData error:",error)
+        }
+    }
+    async loadList(){
+        const cached = await AsyncStorage.getItem("FullList")
+        if(cached == null){
+            promiseFullList().then((data)=>{
+                fullList = data
+                this.setState({fullList:true})
+                this.setState({listLoaded:fullList})
+            })
+            await AsyncStorage.setItem("FullList",this.state.listLoaded)
+            console.log("Caching full list for first time",cached)
+        }
+        else{
+            this.setState({
+                fullList:true,
+                listLoaded:cached
+            })
+            console.log("Full list already in cache")
+        }
+    }
     componentDidMount(){
         this.loadFonts()
-        promiseFullList().then((data)=>{
+        this.loadTestData()
+        this.loadList()
+        /*promiseFullList().then((data)=>{
             fullList = data
             this.setState({fullList:true})
             this.setState({listLoaded:fullList})
-        })
+        })*/
         console.log("NAVIGATING FROM:",this.state.natNav)
 
     }
@@ -242,7 +271,7 @@ class FullListScreen extends Component {
                         <View style = {styles.homeContainer}>
                         
                         <TopRibbon header={this.state.natNav == undefined ? "Full" : this.state.natNav}/>
-                        <BackArrow screenToNavigate = "Home" marginTop="10%"/>
+                        <BackArrow screenToNavigate = "Home" marginTop={100}/>
                         
                         {!this.state.searchBarToggle ? this.filterView():<></>}
                         {this.searchView()}
@@ -336,7 +365,7 @@ const styles = {
     dropdown1:{
         height:'10%',
         width:'100%',
-        marginTop:'5%',
+        marginTop:'0%',
         backgroundColor:'rgb(30,30,30)',
         borderTopColor:'rgb(0,0,0)',
         borderBottomWidth:0,
@@ -348,7 +377,7 @@ const styles = {
     dropdown1Open:{
         height:'40%',
         width:'100%',
-        marginTop:'5%',
+        marginTop:'0%',
         backgroundColor:'rgb(30,30,30)',
         borderTopColor:'rgb(0,0,0)',
         borderBottomWidth:0,

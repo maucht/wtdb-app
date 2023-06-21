@@ -115,7 +115,7 @@ class Shell extends Component {
 
   }
 }
-const responsivePenBox = vh < 800 ? "140%" : "100%"
+const responsivePenBox = vh < 888 ? "140%" : "100%" // 888 is nexus 7 btw
 const styles = {
   homeContainer:{
     height:'100%',
