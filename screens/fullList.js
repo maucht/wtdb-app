@@ -66,30 +66,35 @@ class FullListScreen extends Component {
             console.log("loadTestData error:",error)
         }
     }
-    async loadList(){
-        const cached = await AsyncStorage.getItem("FullList")
-        if(cached == null){
-            promiseFullList().then((data)=>{
-                fullList = data
-                this.setState({fullList:true})
-                this.setState({listLoaded:fullList})
-            })
-            await AsyncStorage.setItem("FullList",this.state.listLoaded)
-            console.log("Caching full list for first time",cached)
+    async loadList() {
+        const cached = await AsyncStorage.getItem("FullList");
+        console.warn("THIS IS CACHED:", cached);
+      
+        if (cached == null || JSON.parse(cached) == null) {
+          console.log("Caching full list for the first time");
+      
+          try {
+            const myData = await promiseFullList();
+            this.setState({ fullList: true, listLoaded: myData });
+            await AsyncStorage.setItem("FullList", JSON.stringify(myData));
+          } catch (error) {
+            console.log("Error retrieving or storing full list:", error);
+          }
+        } else {
+          this.setState({
+            fullList: true,
+            listLoaded: JSON.parse(cached),
+          });
+          console.log("Full list already in cache:", cached);
         }
-        else{
-            this.setState({
-                fullList:true,
-                listLoaded:cached
-            })
-            console.log("Full list already in cache")
-        }
-    }
+      }
+      
+      
     componentDidMount(){
         this.loadFonts()
         this.loadTestData()
         this.loadList()
-        /*promiseFullList().then((data)=>{
+        /*=promiseFullList().then((data)=>{
             fullList = data
             this.setState({fullList:true})
             this.setState({listLoaded:fullList})
