@@ -4,12 +4,14 @@
     "slug": "wtdb_app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/wtdb-icons/adaptive-icon.png",
+    "primaryColor": "#3A3A3A",
+    "backgroundColor": "#FFFFFF",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/wtdb-icons/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#3A3A3A"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -23,7 +25,8 @@
     "android": {
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/wtdb-icons/adaptive-icon.png",
+        "primaryColor": "#FFFFFF",
         "backgroundColor": "#FFFFFF"
       }
     },
