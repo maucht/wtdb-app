@@ -14,18 +14,15 @@ import {secondaryColor} from '../assets/constants.js'
 
 import { promiseFullList } from '../backend/fetchTable'
 
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
 
 
 const vw = Dimensions.get('window').width
 const vh = Dimensions.get('window').height
 
-let fullTable;
-promiseFullList().then((data)=>{
-  fullTable = data
-  console.log("Table:",fullTable)
-
-})
-
+// AsyncStorage.clear()
+// uncomment this to test table fetching (without cache)
 
 class HomeScreen extends Component {
   state = {
@@ -73,8 +70,8 @@ class HomeScreen extends Component {
                   <View marginTop={'-8%'} marginLeft={'11%'}><Entypo name = {'magnifying-glass'} size={vh/14} color={'rgb(80,80,80)'}/></View>
                 </View>
                 <View style = {styles.categoryTwo} onStartShouldSetResponder={(navIndex) => this.handleCatNavPress(1)}>
-                  <Text style = {styles.categoryText}>Full{`\n`}List</Text>
-                  <View marginTop = {'-16%'} marginLeft={'11%'}><Entypo name = "book" color = {secondaryColor} size={vh/14}/></View>
+                  <Text style = {styles.categoryText}>Full List</Text>
+                  <View marginTop = {'-8%'} marginLeft={'11%'}><Entypo name = "book" color = {secondaryColor} size={vh/14}/></View>
                 </View>
                 <View style = {styles.categoryThree} onStartShouldSetResponder={(navIndex) => this.handleCatNavPress(2)}>
                   <Text style = {styles.categoryText}>By Tech Tree</Text>

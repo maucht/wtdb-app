@@ -268,7 +268,7 @@ class FullListScreen extends Component {
         return natNameMap.get(nationRaw)
     }
     render() { // should default filter to alphabetical
-        switch(this.state.fontsLoaded){
+        switch(this.state.fontsLoaded && this.state.fullList != null){
             case(true):
                 if(this.state.listLoaded){
                     console.log(this.state.fullList)
@@ -354,6 +354,9 @@ class FullListScreen extends Component {
                 return(
                     <View style = {styles.homeContainer}>
                         <TopRibbon header={this.state.natNav == undefined ? "Full" : this.state.natNav}/>
+                        <View style = {{height:"70%",width:"100%",justifyContent:'center'}}>
+                            <Text style = {{alignSelf:'center',fontFamily:'Nunito-extra-bold',color:'white'}}>Loading...</Text>
+                        </View>
                     </View>
                 )
         }
