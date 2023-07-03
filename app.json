@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "wtdb_app",
+    "name": "WTDB",
     "slug": "wtdb_app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -28,10 +28,16 @@
         "foregroundImage": "./assets/wtdb-icons/adaptive-icon.png",
         "primaryColor": "#FFFFFF",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.maucht.wtdb_app"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "46ed078c-42eb-487a-a884-f66428ef8334"
+      }
     }
   }
 }
